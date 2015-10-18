@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">VACAPP</string>
+    <string name="title_activity_accept_match">AcceptMatchActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="string_tu_vaca">Tu vaca!</string>
+    <string name="string_agregar_vaca">Agregar vaca a finca</string>
+    <string name="string_selecionar_finca">Selecionar Finca</string>
+    <string name="string_numero">Número</string>
+    <string name="string_image_reject_button">ImageRejectButton</string>
+    <string name="string_image_accept_button">ImageAcceptButton</string>
+    <string name="title_activity_add_cow">Nueva Vaca</string>
+    <string name="reset_string">Reset</string>
+    <string name="all_farms">VacApp: Todas las fincas.</string>
+    <string name="accept_match_string">Aceptar Match</string>
+    <string name="text_fincas_sistema">Fincas en el sistema</string>
+    <string name="textViewAgregarNuevaFinca">Agregar finca al sistema</string>
+    <string name="title_activity_gdrive_connection">GDriveConnectionActivity</string>
+    <string name="title_activity_gdrive_import_export">GDriveImportExportActivity</string>
+</resources>

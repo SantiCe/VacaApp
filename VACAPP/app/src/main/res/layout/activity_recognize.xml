@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cow_pattern">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/border_layout_white"
+        android:layout_margin="@dimen/activity_tight_margin">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Seleccionar Finca"
+            android:id="@+id/textView2"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="@android:color/black" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/textSelectedFarm"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:editable="false"
+            android:text="@string/all_farms"
+            android:textSize="5pt"
+            android:textColor="@android:color/darker_gray"
+            android:gravity="center_horizontal|bottom" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="Iniciar matching"
+            android:onClick="onMatchClick"
+            android:id="@+id/buttonMatch"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:backgroundTint="@color/GreenieBackground" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.4">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/farmListView_recognizeActivity"
+            android:layout_weight="0.8"
+            android:background="@drawable/border_layout_white"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:choiceMode="singleChoice"
+            android:clickable="true"
+            android:divider="@android:color/darker_gray" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="@string/reset_string"
+            android:id="@+id/botonReset"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.2"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:onClick="onResetClick"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:backgroundTint="@color/LightYellow" />
+    </LinearLayout>
+</LinearLayout>

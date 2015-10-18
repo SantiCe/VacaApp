@@ -1,0 +1,249 @@
+package com.example.keinsfield.vacapp.Activities;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.*;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
+import android.view.Display;
+
+import com.example.keinsfield.vacapp.ImageMatcher.Scene;
+import com.googlecode.tesseract.android.TessBaseAPI;
+
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import static java.lang.String.valueOf;
+
+/**
+ * Created by Galapagos on 11/09/2015.
+ */
+public class Utilities {
+
+    private static TessBaseAPI tessBaseAPI = new TessBaseAPI();
+    static{
+        tessBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, "1234567890");
+        tessBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "!@#$%^&*()_+=-qwertyuiop[]}{POIU" +
+                "YTREWQasdASDfghFGHjklJKLl;L:'\"\\|~`xcvXCVbnmBNM,./<>?");
+        Log.d("SC","Created tessbaseapi");
+    }
+
+    public static void PrintShit(Activity caller){
+        File file = Environment.getExternalStorageDirectory();
+        Log.d("SC", valueOf(file));
+        if(file.listFiles() != null)
+        for(File f:file.listFiles()){
+            Log.d("SC", String.valueOf(f));
+        }
+        Log.d("SC","Now with public external storage.");
+        file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        Log.d("SC", valueOf(file));
+        if(file.listFiles() != null)
+        for(File f:file.listFiles()) Log.d("SC", String.valueOf(f));
+        Log.d("SC","External files dir");
+        file = caller.getExternalFilesDir(null);
+        Log.d("SC", valueOf(file));
+        file = caller.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        Log.d("SC", valueOf(file));
+    }
+
+    public static void GalleryAddPics(String fpath, Activity caller) {
+        MediaScannerConnection.scanFile(caller, new String[] { fpath }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("ExternalStorage", "Scanned " + path + ":");
+                        Log.i("ExternalStorage", "-> uri=" + uri);
+                    }
+                });
+    }
+
+    /**
+     *
+     * @return The external storage directory where the App is saving its pictures.
+     * If the returned value is null, there is no external storage available for R/W.
+     */
+    public static File GetStorageDirectory(Activity caller, boolean temp){
+        try{
+            // Intente primero hacer un directorio publico en la memoria externa.
+            String state = Environment.getExternalStorageState();
+            if (Environment.MEDIA_MOUNTED.equals(state) && !temp){
+
+                File album = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"VACAPP_Pictures");
+                if(!album.mkdirs() && !album.isDirectory() && !album.exists()){
+                    // If directory can't be created in public external storage, try private external storage.
+                    album = caller.getExternalFilesDir(null);
+                    album = new File(album,"VACAPP_Pictures");
+                    if(!album.mkdirs() && !album.isDirectory() && !album.exists()){
+                        File file = caller.getDir("VACAPP", Context.MODE_PRIVATE);
+                        if(!file.exists()) file.mkdirs();
+                        return file;
+                    }
+                }
+                return album;
+            }
+            else{
+                File file = caller.getDir("VACAPP", Context.MODE_PRIVATE);
+                if(temp) file = new File(file,"temp");
+                else file = new File(file,"pictures");
+                if(!file.exists() || !file.isDirectory()) file.mkdirs();
+                return file;
+            }
+        }
+        catch(Exception e){
+            Log.d("SC", e.getMessage());
+            throw e;
+        }
+    }
+
+    public static File GetStorageDirectory(Activity caller){
+        return GetStorageDirectory(caller,false);
+    }
+
+    public static ArrayList<String> GetFarms(Activity caller){
+        ArrayList<String> ret = new ArrayList<>();
+        File root = GetStorageDirectory(caller);
+        if(root == null) return ret;
+        else{
+
+            File[] files = root.listFiles();
+            for(File file:files){
+                if(file.isDirectory()){
+                    ret.add(file.getName());
+                }
+            }
+            return ret;
+        }
+    }
+
+    public static void showDialog(String title, String message,Activity caller) {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        };
+        showDialog(title,message,caller,listener);
+    }
+
+    public static void showDialog(String title, String message, Activity caller, DialogInterface.OnClickListener listener){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(caller);
+        alertDialog.setTitle(title);
+        alertDialog.setCancelable(false);
+        alertDialog.setMessage(message);
+
+        alertDialog.setPositiveButton("OK", listener);
+        alertDialog.show();
+    }
+
+    public static void showYesNoDialog(String title, String message, Activity caller, DialogInterface.OnClickListener trueListener, String yesMsg, DialogInterface.OnClickListener falseListener, String noMsg){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(caller);
+        alertDialog.setTitle(title);
+        alertDialog.setCancelable(false);
+        alertDialog.setMessage(message);
+
+        alertDialog.setPositiveButton(yesMsg, trueListener);
+        alertDialog.setNegativeButton(noMsg, falseListener);
+        alertDialog.show();
+    }
+
+    public static boolean isVacappImage(File file){
+        String name = file.getName();
+        name = name.toLowerCase();
+        if(!(name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".numberBmp") || name.endsWith(".jpg")))return false;
+        try{
+            String prefix = name.split("\\.")[0];
+            Integer.parseInt(prefix);
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
+    }
+
+    public static Mat bitmapToMat(Bitmap bmp){
+        Mat ret = new Mat(bmp.getWidth(), bmp.getHeight(), CvType.CV_8UC1);
+        Utils.bitmapToMat(bmp, ret);
+        return ret;
+    }
+
+    public static Scene fileToScene (File f){
+        return new Scene(bitmapToMat(BitmapFactory.decodeFile(f.toString())));
+    }
+
+    public static int getCowNumberFromFile(File file){
+        String prefix = file.getName().split("\\.")[0];
+        return Integer.parseInt(prefix);
+    }
+
+    private static int calculateInSampleSize(BitmapFactory.Options options, Activity context, double wRatio, double hRatio) {
+        Point point = new Point();
+        Display display = context.getWindowManager().getDefaultDisplay();
+        display.getSize(point);
+        double reqWidth = wRatio*point.y;
+        double reqHeight = point.x*hRatio;
+
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+    /**
+     * Usar este método para tomar un archivo con una imagen y devolver un bitmap scaleado.
+     * @param file
+     * @return
+     */
+    public static Bitmap fileToBitmap(String file, Activity context, double wRatio, double hRatio){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(file,options);
+        options.inSampleSize = calculateInSampleSize(options,context,wRatio,hRatio);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(file,options);
+    }
+
+    /**
+     * Usar este método para tomar un archivo con bytes y devolver un bitmap scaleado.
+     * @param data
+     * @return
+     */
+    public static Bitmap byteArrayToBitmap(byte[] data, Activity context, double wRatio, double hRatio){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(data,0,data.length, options);
+        options.inSampleSize = calculateInSampleSize(options,context, wRatio, hRatio);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(data,0,data.length,options);
+    }
+
+    public static String getCowDir(File file, Activity context){
+        String name = file.toString();
+        String toRem = GetStorageDirectory(context).toString();
+        int index = name.lastIndexOf(toRem);
+        if(index == -1) return "" + getCowNumberFromFile(file);
+        else return name.substring(index+1,name.length());
+    }
+}

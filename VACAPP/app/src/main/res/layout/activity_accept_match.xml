@@ -1,0 +1,104 @@
+ <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.keinsfield.vacapp.AcceptMatchActivity"
+     android:background="@drawable/cow_pattern">
+
+
+     <LinearLayout
+         android:orientation="horizontal"
+         android:layout_width="match_parent"
+         android:layout_height="0dp"
+         android:layout_weight="1">
+
+         <TextView
+             android:layout_width="0dp"
+             android:layout_height="fill_parent"
+             android:textAppearance="?android:attr/textAppearanceLarge"
+             android:text="Foto Actual"
+             android:id="@+id/labelFotoActual"
+             android:layout_weight="1"
+             android:background="@drawable/super_thin_border_layout_grey"
+             android:elegantTextHeight="true"
+             android:gravity="center_vertical|center_horizontal"
+             android:textColor="@android:color/black" />
+
+         <TextView
+             android:layout_width="0dp"
+             android:layout_height="fill_parent"
+             android:textAppearance="?android:attr/textAppearanceMedium"
+             android:text="Mejor Match"
+             android:id="@+id/lblMejorMatch"
+             android:layout_weight="1"
+             android:background="@drawable/super_thin_border_layout_grey"
+             android:elegantTextHeight="true"
+             android:gravity="center_vertical|center_horizontal"
+             android:backgroundTintMode="src_atop"
+             android:textColor="@android:color/black" />
+     </LinearLayout>
+
+     <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/takenImageView"
+                android:layout_weight="1"
+                android:contentDescription="takenImage"
+                android:background="@drawable/thin_border_layout" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/matchedImageView"
+                android:layout_weight="1"
+                android:contentDescription="matchedImage"
+                android:background="@drawable/thin_border_layout" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Aceptar match"
+                android:onClick="onAcceptButton"
+                android:id="@+id/buttonAcceptMatch"
+                android:layout_weight="1"
+                android:background="@color/GreenieBackground" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Intentar de nuevo"
+                android:onClick="onRematchButton"
+                android:id="@+id/buttonTryAgain"
+                android:layout_weight="1"
+                android:background="@color/LightOrange" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Cancelar"
+                android:onClick="onCancelButton"
+                android:id="@+id/buttonCancel"
+                android:layout_weight="1"
+                android:background="@android:color/holo_red_dark" />
+        </LinearLayout>
+
+ </LinearLayout>
+
+
