@@ -50,6 +50,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utilities.wakey();
         setContentView(R.layout.activity_main);
         cameraFrame = (SurfaceView) findViewById(R.id.camera_frame);
         shutterButton = (Button) findViewById(R.id.shutter_button);

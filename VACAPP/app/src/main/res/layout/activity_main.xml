@@ -39,11 +39,6 @@
                 android:layout_marginLeft="60dp"
                 />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Button"
-                android:id="@+id/gdrive_button" />
         </LinearLayout>
 
         <LinearLayout
@@ -60,6 +55,14 @@
                 android:layout_marginBottom="15dp"
                 android:layout_marginRight="30dp"/>
         </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Button"
+            android:id="@+id/gdrive_button"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
 
     </RelativeLayout>

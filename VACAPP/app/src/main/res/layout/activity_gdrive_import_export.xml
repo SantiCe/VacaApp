@@ -1,6 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:background="@drawable/cow_pattern">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/activity_tight_margin"
+        android:background="@android:color/background_dark"
+        android:weightSum="5"
+        android:theme="@style/AppTheme">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:text="@string/fincasLocales"
+            android:id="@+id/textView"
+            android:layout_weight="1"
+            android:textColor="@android:color/background_light"
+            android:textStyle="bold"
+            style="@style/AppTheme"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:layout_margin="@dimen/activity_tight_margin" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/localListView"
+            android:layout_weight="3"
+            style="@style/AppTheme" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="Exportar"
+            android:id="@+id/button"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:onClick="onExportClick" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/activity_tight_margin"
+        android:background="@android:color/background_dark"
+        android:weightSum="5"
+        android:theme="@style/AppTheme" >
+
+        <TextView
+            style="@style/AppTheme"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:text="Fincas disponibles en Google Drive:"
+            android:id="@+id/textView3"
+            android:layout_weight="1"
+            android:textColor="@android:color/background_light"
+            android:textStyle="bold"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:layout_margin="@dimen/activity_tight_margin" />
+
+        <ListView
+            style="@style/AppTheme"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/driveListView"
+            android:layout_weight="3" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="Importar"
+            android:id="@+id/importButton"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:onClick="onImportClick" />
+    </LinearLayout>
 
 </LinearLayout>

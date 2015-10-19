@@ -19,9 +19,12 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static java.lang.String.valueOf;
 
@@ -38,6 +41,9 @@ public class Utilities {
         Log.d("SC","Created tessbaseapi");
     }
 
+    public static void wakey(){
+        Log.d("SC","Utilities wakey.");
+    }
     public static void PrintShit(Activity caller){
         File file = Environment.getExternalStorageDirectory();
         Log.d("SC", valueOf(file));
@@ -125,6 +131,35 @@ public class Utilities {
         }
     }
 
+    //Returns all vacapp images in the phone storage, organized by farm.
+    public static HashMap<String,ArrayList<File>> getAllVacappImages(Activity caller){
+        File root = Utilities.GetStorageDirectory(caller);
+        ArrayList<String> farmList = Utilities.GetFarms(caller);
+        HashMap<String,ArrayList<File>> files = new HashMap<>();
+        Log.d("SC","Entering farms loop.");
+        for(String s:farmList){
+            //Log.d("SC",s);
+            File farmDir = new File(root,s);
+            if(!farmDir.isDirectory()) continue;
+            File[] flist = farmDir.listFiles();
+            if(flist == null)continue;
+            ArrayList<File> pics = new ArrayList<File>();
+            for(File f: flist){
+                try {
+                    Log.d("SC", "Looking at item. " + f.toString());
+                    if (Utilities.isVacappImage(f)) {
+                        pics.add(f);
+                    }
+                }
+                catch(Exception e){
+                    Log.d("SC", "Failed with: "+f.toString());
+                }
+            }
+            files.put(s,pics);
+        }
+        return files;
+    }
+
     public static void showDialog(String title, String message,Activity caller) {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -155,8 +190,7 @@ public class Utilities {
         alertDialog.show();
     }
 
-    public static boolean isVacappImage(File file){
-        String name = file.getName();
+    public static boolean isVacappFilename(String name){
         name = name.toLowerCase();
         if(!(name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".numberBmp") || name.endsWith(".jpg")))return false;
         try{
@@ -167,6 +201,10 @@ public class Utilities {
         catch(Exception e){
             return false;
         }
+    }
+    public static boolean isVacappImage(File file){
+        String name = file.getName();
+        return isVacappFilename(name);
     }
 
     public static Mat bitmapToMat(Bitmap bmp){
@@ -233,10 +271,10 @@ public class Utilities {
     public static Bitmap byteArrayToBitmap(byte[] data, Activity context, double wRatio, double hRatio){
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeByteArray(data,0,data.length, options);
+        BitmapFactory.decodeByteArray(data, 0, data.length, options);
         options.inSampleSize = calculateInSampleSize(options,context, wRatio, hRatio);
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeByteArray(data,0,data.length,options);
+        return BitmapFactory.decodeByteArray(data, 0, data.length, options);
     }
 
     public static String getCowDir(File file, Activity context){
@@ -245,5 +283,14 @@ public class Utilities {
         int index = name.lastIndexOf(toRem);
         if(index == -1) return "" + getCowNumberFromFile(file);
         else return name.substring(index+1,name.length());
+    }
+
+    public static void copyFile(InputStream in, OutputStream out) throws Exception{
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
     }
 }
