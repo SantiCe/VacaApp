@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.keinsfield.vacapp.Mundo.Utilities;
 import com.example.keinsfield.vacapp.R;
 
 import java.io.File;
@@ -28,7 +29,7 @@ public class AddFarmActivity extends Activity {
         ListView view = (ListView) findViewById(R.id.farmListView);
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.custom_list_item,Utilities.GetFarms(this));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.custom_list_item, Utilities.GetFarms(this));
         view.setAdapter(adapter);
 
         Intent intent= getIntent();

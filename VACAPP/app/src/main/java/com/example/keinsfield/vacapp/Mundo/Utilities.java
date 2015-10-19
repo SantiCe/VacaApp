@@ -1,4 +1,4 @@
-package com.example.keinsfield.vacapp.Activities;
+package com.example.keinsfield.vacapp.Mundo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,8 +19,6 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -277,14 +275,6 @@ public class Utilities {
         return BitmapFactory.decodeByteArray(data, 0, data.length, options);
     }
 
-    public static String getCowDir(File file, Activity context){
-        String name = file.toString();
-        String toRem = GetStorageDirectory(context).toString();
-        int index = name.lastIndexOf(toRem);
-        if(index == -1) return "" + getCowNumberFromFile(file);
-        else return name.substring(index+1,name.length());
-    }
-
     public static void copyFile(InputStream in, OutputStream out) throws Exception{
         byte[] buf = new byte[1024];
         int len;
@@ -292,5 +282,12 @@ public class Utilities {
             out.write(buf, 0, len);
         }
         in.close();
+    }
+
+    public static File getCowBD(Activity context){
+        File root = GetStorageDirectory(context);
+        File look = new File(root,"cowBD.cow");
+        if(!look.exists()) return null;
+        return look;
     }
 }

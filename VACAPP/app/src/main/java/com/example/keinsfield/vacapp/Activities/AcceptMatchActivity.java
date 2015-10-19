@@ -3,7 +3,6 @@ package com.example.keinsfield.vacapp.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.keinsfield.vacapp.Mundo.Utilities;
 import com.example.keinsfield.vacapp.R;
 
 import java.io.File;
@@ -32,7 +32,7 @@ public class AcceptMatchActivity extends Activity {
         double wRatio = 0.4;
         double hRatio = 0.75;
         ImageView takenView = (ImageView)findViewById(R.id.takenImageView);
-        takenView.setImageBitmap(Utilities.fileToBitmap(taken,this,wRatio,hRatio));
+        takenView.setImageBitmap(Utilities.fileToBitmap(taken, this, wRatio, hRatio));
 
         ImageView matchView = (ImageView)findViewById(R.id.matchedImageView);
         matchView.setImageBitmap(Utilities.fileToBitmap(match,this,wRatio,hRatio));

@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.example.keinsfield.vacapp.Camera.CameraEngine;
 import com.example.keinsfield.vacapp.Images.Tools;
+import com.example.keinsfield.vacapp.Mundo.Utilities;
 import com.example.keinsfield.vacapp.OCR.Tesseract;
 import com.example.keinsfield.vacapp.R;
 import com.example.keinsfield.vacapp.Views.FocusBoxView;
