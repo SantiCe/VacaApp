@@ -21,7 +21,8 @@
         android:layout_gravity="right|bottom">
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout3">
             <Button
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -44,7 +45,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:id="@+id/linearLayout2">
 
             <Button
                 android:layout_width="32dp"
@@ -59,10 +61,24 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
+            android:text="GoogleDrive"
             android:id="@+id/gdrive_button"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_alignBottom="@+id/linearLayout3"
+            android:layout_toRightOf="@+id/linearLayout3"
+            android:layout_toEndOf="@+id/linearLayout3" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CowDetail"
+            android:id="@+id/detailButton"
+            android:layout_alignBottom="@+id/gdrive_button"
+            android:layout_toRightOf="@+id/gdrive_button"
+            android:layout_toEndOf="@+id/gdrive_button"
+            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp" />
 
 
     </RelativeLayout>

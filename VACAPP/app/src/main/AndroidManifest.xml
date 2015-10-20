@@ -56,6 +56,11 @@
             android:label="GDriveActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        <activity
+            android:name=".Activities.CowDetailActivity"
+            android:label="@string/title_activity_cow_detail"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
     </application>
 
 </manifest>

@@ -125,6 +125,12 @@ public class Utilities {
                     ret.add(file.getName());
                 }
             }
+            //Look for external farms.
+            HashMap<CowKey,Cow> map = CowPersistenceManager.getCows(caller);
+            for(CowKey key:map.keySet()){
+                File file = new File(root,key.farm);
+                if(!file.exists() && file.mkdir()) ret.add(key.farm);
+            }
             return ret;
         }
     }
@@ -287,7 +293,6 @@ public class Utilities {
     public static File getCowBD(Activity context){
         File root = GetStorageDirectory(context);
         File look = new File(root,"cowBD.cow");
-        if(!look.exists()) return null;
         return look;
     }
 }

@@ -184,7 +184,6 @@ public class AddCowActivity extends Activity {
         Intent intent=new Intent(getApplicationContext(),MainActivity.class);
         startActivity(intent);
         finish();
-
     }
 
     private DialogInterface.OnClickListener overWriteClickListener(final File file, final View view, boolean write) {

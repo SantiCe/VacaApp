@@ -13,6 +13,9 @@ import android.widget.Button;
 
 import com.example.keinsfield.vacapp.Camera.CameraEngine;
 import com.example.keinsfield.vacapp.Images.Tools;
+import com.example.keinsfield.vacapp.Mundo.Cow;
+import com.example.keinsfield.vacapp.Mundo.CowKey;
+import com.example.keinsfield.vacapp.Mundo.CowPersistenceManager;
 import com.example.keinsfield.vacapp.Mundo.Utilities;
 import com.example.keinsfield.vacapp.OCR.Tesseract;
 import com.example.keinsfield.vacapp.R;
@@ -21,6 +24,7 @@ import com.example.keinsfield.vacapp.Views.FocusBoxView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.Boolean;import java.lang.Exception;import java.lang.Integer;import java.lang.Override;import java.lang.String;
+import java.util.HashMap;
 
 /**
  * GUI by PJSolutions
@@ -47,17 +51,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
     SurfaceHolder surfaceHolder;
     Bitmap numberBmp;
     File fullPicFile;
-
+    Button detailButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utilities.wakey();
+        CowPersistenceManager.syncWithLocal(this);
         setContentView(R.layout.activity_main);
         cameraFrame = (SurfaceView) findViewById(R.id.camera_frame);
         shutterButton = (Button) findViewById(R.id.shutter_button);
         shutterButton.setOnClickListener(this);
         gDriveButton = (Button) findViewById(R.id.gdrive_button);
         gDriveButton.setOnClickListener(this);
+        detailButton = (Button)findViewById(R.id.detailButton);
+        detailButton.setOnClickListener(this);
         addCow = (Button) findViewById(R.id.add_button);
         addCow.setOnClickListener(this);
         recogCow = (Button) findViewById(R.id.recog_button);
@@ -65,7 +71,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         focusBox = (FocusBoxView) findViewById(R.id.focus_box);
         photoTaken = false;
         surfaceHolder = cameraFrame.getHolder();
-
+        HashMap<CowKey,Cow> map = CowPersistenceManager.getCows(this);
+        for(CowKey key:map.keySet()){
+            Log.d("SC",key.farm+" "+key.nv);
+        }
     }
 
     @Override
@@ -175,6 +184,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
 
         else if (v == gDriveButton){
             Intent intent = new Intent(this,GDriveImportExportActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else if(v == detailButton){
+            Intent intent = new Intent(this,CowDetailActivity.class);
             startActivity(intent);
             finish();
         }

@@ -3,6 +3,9 @@ package com.example.keinsfield.vacapp.Mundo;
 import android.app.Activity;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,10 +30,11 @@ public class CowPersistenceManager {
     private static HashMap<CowKey,Cow> getCowsFromDBFile(Activity context){
         try {
             File file = Utilities.getCowBD(context);
-            if (file == null) return (new HashMap<>());
+            if (!file.exists()) return (new HashMap<>());
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
             HashMap<CowKey,Cow> otList = (HashMap<CowKey,Cow>)ois.readObject();
             ois.close();
+            if(otList == null) return new HashMap<>();
             return (otList);
         } catch (Exception e) {
             Log.d("SC", "Problems reading from file. " + e.getMessage());
@@ -55,8 +59,7 @@ public class CowPersistenceManager {
     public static void syncWithLocal(Activity context){
         try {
             //First get all cows from file.
-            cowList = getCows(context);
-            cowList = merge(cowList,getCowsFromDBFile(context));
+            cowList = (cowList == null)? getCows(context):merge(cowList,getCowsFromDBFile(context));
             //Find cows in VACAPP images.
             HashMap<String, ArrayList<File>> map = Utilities.getAllVacappImages(context);
             for (String farm : map.keySet()) {
@@ -71,9 +74,11 @@ public class CowPersistenceManager {
             }
             //Update file with merged info.
             updateDBFile(context);
+            Log.d("SC","Localsync worked!");
         }
         catch(Exception e){
             Log.d("SC","Problems with localsync: "+e.getMessage());
+            e.printStackTrace();
         }
 
     }
@@ -83,33 +88,38 @@ public class CowPersistenceManager {
     * losing information*/
     private static void updateDBFile(Activity context) throws Exception{
         File file = Utilities.getCowBD(context);
-        if(file != null) file.delete();
+        if(file.exists()) file.delete();
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
         oos.writeObject(cowList);
         oos.close();
     }
 
-    public static void syncWithWebService(){
+    public static int syncWithWebService(String jsonString,Activity context) throws Exception{
+        Log.d("SC","GOT: "+jsonString);
+        JSONObject jsonObject = new JSONObject(jsonString);
+        JSONArray cowsJson = jsonObject.getJSONArray("cows");
+        int len = cowsJson.length();
+        HashMap<CowKey,Cow> map = new HashMap<>();
+        for(int i = 0; i < len; i ++){
+            try{
+                JSONObject jcow = cowsJson.getJSONObject(i);
+                Cow cow = new Cow(jcow.getString("nombre"),jcow.getString("finca"),jcow.getInt("nv"),jcow.getString("ultimo_parto"),
+                        jcow.getInt("hato"),jcow.getString("loc"),jcow.getInt("partos"),jcow.getInt("dias_lac"),
+                        jcow.getInt("lts_dia"),jcow.getString("primer_servicio"));
+                map.put(new CowKey(cow),cow);
+            }
+            catch (Exception e){
+                Log.d("SC","Had problems with: "+cowsJson.get(i));
+            }
+        }
+        cowList = merge(map,getCows(context));
+        updateDBFile(context);
+        return len;
+    }
 
+    public static void deleteDBFile(Activity caller) {
+        File file = Utilities.getCowBD(caller);
+        if(file.exists())file.delete();
     }
 }
 
-class CowKey{
-    public String farm;
-    public int nv;
-
-    public CowKey(int n, String farm){
-        nv = n;
-        this.farm = farm;
-    }
-
-    public CowKey(Cow cow){
-        nv = cow.nv;
-        this.farm = cow.finca;
-    }
-
-    public boolean equals (Object o){
-        CowKey oKey = (CowKey)o;
-        return nv == oKey.nv && farm.equals(oKey.farm);
-    }
-}
