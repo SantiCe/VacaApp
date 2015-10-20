@@ -61,6 +61,11 @@
             android:label="@string/title_activity_cow_detail"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        <activity
+            android:name=".Activities.WebServiceActivity"
+            android:label="@string/title_activity_web_service"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
     </application>
 
 </manifest>

@@ -49,5 +49,12 @@ public class Cow implements Serializable
         this.lts_dia = lts_dia;
         this.primer_servicio = primer_servicio;
     }
+
+    public String toString(){
+        String bs = "\n";
+        String s = "Nombre: "+nombre+"      Finca: "+finca+bs;
+        s+="Id: "+nv+"      Hato: "+hato;
+        return s;
+    }
 }
 

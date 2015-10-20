@@ -35,10 +35,26 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:id="@+id/recog_button"
-                android:background="@drawable/cow_eye"
+                android:background="@drawable/cow_eye_layout"
                 android:layout_marginBottom="15dp"
                 android:layout_marginLeft="60dp"
                 />
+
+            <Button
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/detailButton"
+                android:background="@drawable/detail_layout"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="60dp" />
+
+            <Button
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/cloudButton"
+                android:background="@drawable/cloud_layout"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="60dp" />
 
         </LinearLayout>
 
@@ -57,28 +73,6 @@
                 android:layout_marginBottom="15dp"
                 android:layout_marginRight="30dp"/>
         </LinearLayout>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GoogleDrive"
-            android:id="@+id/gdrive_button"
-            android:layout_marginLeft="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_alignBottom="@+id/linearLayout3"
-            android:layout_toRightOf="@+id/linearLayout3"
-            android:layout_toEndOf="@+id/linearLayout3" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CowDetail"
-            android:id="@+id/detailButton"
-            android:layout_alignBottom="@+id/gdrive_button"
-            android:layout_toRightOf="@+id/gdrive_button"
-            android:layout_toEndOf="@+id/gdrive_button"
-            android:layout_marginLeft="25dp"
-            android:layout_marginStart="25dp" />
 
 
     </RelativeLayout>

@@ -19,4 +19,5 @@
     <string name="title_activity_gdrive_import_export">GDriveImportExportActivity</string>
     <string name="fincasLocales">Fincas disponibles localmente:</string>
     <string name="title_activity_cow_detail">CowDetailActivity</string>
+    <string name="title_activity_web_service">WebServiceActivity</string>
 </resources>

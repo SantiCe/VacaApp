@@ -39,20 +39,6 @@ public class CowDetailActivity extends Activity {
     private ProgressDialog progressDialog;
     private ArrayList<TextView> textViews;
 
-    protected void onPrepareDialog(int id, Dialog dialog) {
-        progressDialog.setTitle("Importando informacion.");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
-        progressDialog.setProgress(0);
-        progressDialog.show();
-
-    }
-
-    protected Dialog onCreateDialog(int id) {
-        progressDialog = new ProgressDialog(this);
-        return progressDialog;
-    }
-
     private void setUnknown() {
         String s = "- -";
         for (TextView view : textViews) view.setText(s);
@@ -93,34 +79,6 @@ public class CowDetailActivity extends Activity {
             e.printStackTrace();
             throw e;
         }
-    }
-
-    public void onSyncClick(View v) {
-        final String[] url = {null};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Seleccionar URL con informacion de vacas");
-
-        // Set up the input
-        final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                url[0] = input.getText().toString();
-                DownloadTask task = new DownloadTask(CowDetailActivity.this);
-                task.execute(url);
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        Dialog d = builder.show();
     }
 
     public void onFindClick(View v) {
@@ -187,57 +145,4 @@ public class CowDetailActivity extends Activity {
         BackToMain();
         finish();
     }
-
-    class DownloadTask extends AsyncTask<String, Integer, String> {
-        public Exception error = null;
-        public Activity context;
-
-        public DownloadTask(Activity context) {
-            this.context = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            context.showDialog(PROGRESS_ID);
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                URL url = new URL(params[0]);
-                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-                String json = "";
-                String line;
-                while ((line = br.readLine()) != null) {
-                    json += line;
-                }
-                br.close();
-                return json;
-            } catch (Exception e) {
-                e.printStackTrace();
-                error = e;
-                return null;
-            }
-        }
-
-        protected void onPostExecute(String result) {
-            progressDialog.dismiss();
-            if (result == null) {
-
-                Utilities.showDialog("Error", "Error adquiriendo informacion del webservice. " + error.getMessage(), context);
-                return;
-            }
-            try {
-                int len =CowPersistenceManager.syncWithWebService(result, context);
-
-                Utilities.showDialog("Syncronizacion Completa", "La informacion en el webservice ahora está disponible localmente. Importadas "+len+" vacas.", context);
-            } catch (Exception e) {
-                Utilities.showDialog("Error", "Se pudo adquirir informacion del webservice, pero hubo problemas leyendola. " + e.getMessage(), context);
-                error = e;
-            }
-
-        }
-    }
-
 }

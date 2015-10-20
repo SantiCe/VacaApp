@@ -94,18 +94,20 @@ public class CowPersistenceManager {
         oos.close();
     }
 
-    public static int syncWithWebService(String jsonString,Activity context) throws Exception{
+    public static ArrayList<Cow> syncWithWebService(String jsonString,Activity context) throws Exception{
         Log.d("SC","GOT: "+jsonString);
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONArray cowsJson = jsonObject.getJSONArray("cows");
         int len = cowsJson.length();
         HashMap<CowKey,Cow> map = new HashMap<>();
+        ArrayList<Cow> ret = new ArrayList<Cow>();
         for(int i = 0; i < len; i ++){
             try{
                 JSONObject jcow = cowsJson.getJSONObject(i);
                 Cow cow = new Cow(jcow.getString("nombre"),jcow.getString("finca"),jcow.getInt("nv"),jcow.getString("ultimo_parto"),
                         jcow.getInt("hato"),jcow.getString("loc"),jcow.getInt("partos"),jcow.getInt("dias_lac"),
                         jcow.getInt("lts_dia"),jcow.getString("primer_servicio"));
+                ret.add(cow);
                 map.put(new CowKey(cow),cow);
             }
             catch (Exception e){
@@ -114,7 +116,7 @@ public class CowPersistenceManager {
         }
         cowList = merge(map,getCows(context));
         updateDBFile(context);
-        return len;
+        return ret;
     }
 
     public static void deleteDBFile(Activity caller) {
