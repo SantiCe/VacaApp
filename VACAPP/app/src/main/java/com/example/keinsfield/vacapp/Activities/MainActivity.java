@@ -1,6 +1,8 @@
 package com.example.keinsfield.vacapp.Activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -43,7 +45,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
     Button shutterButton;
     Button addCow;
     Button recogCow;
-    Button gDriveButton;
+    Button cloudButton;
     FocusBoxView focusBox;
     SurfaceView cameraFrame;
     CameraEngine cameraEngine;
@@ -60,8 +62,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         cameraFrame = (SurfaceView) findViewById(R.id.camera_frame);
         shutterButton = (Button) findViewById(R.id.shutter_button);
         shutterButton.setOnClickListener(this);
-        gDriveButton = (Button) findViewById(R.id.gdrive_button);
-        gDriveButton.setOnClickListener(this);
+        cloudButton = (Button) findViewById(R.id.cloudButton);
+        cloudButton.setOnClickListener(this);
         detailButton = (Button)findViewById(R.id.detailButton);
         detailButton.setOnClickListener(this);
         addCow = (Button) findViewById(R.id.add_button);
@@ -133,7 +135,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         SurfaceHolder surfaceHolder = cameraFrame.getHolder();
         surfaceHolder.removeCallback(this);
     }
-
+    AlertDialog alertDialog;
     @Override
     public void onClick(View v) {
         if (v == shutterButton) {
@@ -181,16 +183,33 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
             startActivity(intent);
             finish();
         }
-
-        else if (v == gDriveButton){
-            Intent intent = new Intent(this,GDriveImportExportActivity.class);
-            startActivity(intent);
-            finish();
-        }
         else if(v == detailButton){
             Intent intent = new Intent(this,CowDetailActivity.class);
             startActivity(intent);
             finish();
+        }
+
+        else if(v == cloudButton){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            String[] array = new String[]{"Importar/Exportar fotos de Google Drive.","Importar informacion de vacas.","Volver"};
+            builder.setTitle("Escoger accion")
+                    .setItems(array, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.d("SC", String.valueOf(alertDialog==dialog));
+                            alertDialog.dismiss();
+                            if (which == 0) {
+                                Intent intent = new Intent(getApplicationContext(), GDriveImportExportActivity.class);
+                                startActivity(intent);
+                            } else if (which == 1) {
+                                Intent intent = new Intent(getApplicationContext(), WebServiceActivity.class);
+                                startActivity(intent);
+                            } else {
+                                return;
+                            }
+                        }
+                    });
+            alertDialog = builder.create();
+
         }
     }
 
