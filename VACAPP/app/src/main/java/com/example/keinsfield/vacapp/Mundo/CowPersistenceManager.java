@@ -123,5 +123,11 @@ public class CowPersistenceManager {
         File file = Utilities.getCowBD(caller);
         if(file.exists())file.delete();
     }
+
+    public static void modifyCow(Cow newCow, Activity context) throws Exception{
+        cowList = getCows(context);
+        cowList.remove(new CowKey(newCow));
+        addCow(newCow,context);
+    }
 }
 
