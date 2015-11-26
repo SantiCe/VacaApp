@@ -7,6 +7,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,7 +44,10 @@ public class CowDetailActivity extends Activity {
     private void setUnknown() {
         String s = "- -";
         for (TextView view : textViews) view.setText(s);
-        imageView.setImageResource(R.drawable.app_icon);
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inSampleSize = 4;
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.app_icon,opt);
+        imageView.setImageBitmap(bmp);
     }
 
     @Override
