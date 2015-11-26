@@ -190,12 +190,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         }
 
         else if(v == cloudButton){
+            Log.d(TAG, "Cloud button");
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String[] array = new String[]{"Importar/Exportar fotos de Google Drive.","Importar informacion de vacas.","Volver"};
+            Log.d(TAG, "Cloud creating builder");
             builder.setTitle("Escoger accion")
                     .setItems(array, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.d("SC", String.valueOf(alertDialog==dialog));
+                            Log.d("SC", String.valueOf(alertDialog == dialog));
                             alertDialog.dismiss();
                             if (which == 0) {
                                 Intent intent = new Intent(getApplicationContext(), GDriveImportExportActivity.class);
@@ -208,7 +210,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
                             }
                         }
                     });
+            Log.d(TAG, "jUSTO ANTES DE EJECUTAR");
             alertDialog = builder.create();
+            alertDialog.show();
 
         }
     }
