@@ -57,6 +57,7 @@ public class WebServiceActivity extends Activity {
     public void onSyncClick(View v) {
         if (editText.getText() == null) return;
         String url = editText.getText().toString();
+        url = "http://private-516ee-vacapp.apiary-mock.com/cows";
         DownloadTask task = new DownloadTask(this);
         task.execute(url);
     }
