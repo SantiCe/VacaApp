@@ -413,7 +413,44 @@
             android:layout_weight="1"
             android:textSize="12dp"
             android:onClick="onCancelClick" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+
+        <Button
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/record_layout"
+            android:id="@+id/record"
+            android:layout_marginRight="30dp"
+             />
+
+        <Button
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stop_layout"
+            android:id="@+id/detener"
+            android:layout_marginRight="30dp"/>
+        <Button
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/play_layout"
+            android:id="@+id/reproducir"
+            android:layout_marginRight="30dp"
+          />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/stop_layout"
+            android:id="@+id/detenerReproduccion"
+            android:layout_marginRight="30dp" />
 
     </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rectext" />
+    </LinearLayout>
+
 </LinearLayout>
 

@@ -2,7 +2,6 @@ package com.example.keinsfield.vacapp.Activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -10,8 +9,10 @@ import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,8 +26,14 @@ import com.example.keinsfield.vacapp.Mundo.Utilities;
 import com.example.keinsfield.vacapp.R;
 
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import android.widget.Button;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+
 
 public class CowDetailActivity extends Activity {
     private static final int PROGRESS_ID = 0;
@@ -43,6 +50,15 @@ public class CowDetailActivity extends Activity {
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
     private boolean onEditMode = false;
+    private MediaRecorder myRecorder;
+    private MediaPlayer myPlayer;
+    private String outputFile = null;
+    private Button startBtn;
+    private Button stopBtn;
+    private Button playBtn;
+    private Button detenerReproduccion;
+    private TextView rectext;
+    private String outputPlayFile;
 
     private void setUnknown(boolean updateImage) {
         String s = "";
@@ -81,6 +97,42 @@ public class CowDetailActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cow_detail);
+
+        startBtn = (Button)findViewById(R.id.record);
+        startBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start(v);
+            }
+        });
+
+        stopBtn = (Button)findViewById(R.id.detener);
+        stopBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stop(v);
+            }
+        });
+
+        playBtn = (Button)findViewById(R.id.reproducir);
+        playBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                play(v);
+            }
+        });
+
+        detenerReproduccion = (Button) findViewById(R.id.detenerReproduccion);
+        detenerReproduccion.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopPlay(v);
+            }
+        });
+
+        rectext = (TextView) findViewById(R.id.rectext);
+
+
         try {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             imageView = (ImageView) findViewById(R.id.imageView);
@@ -139,12 +191,130 @@ public class CowDetailActivity extends Activity {
                 }
             });
 
+            //crear grabar
+            myRecorder = new MediaRecorder();
+            myRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+
+            myRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            myRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+            outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/VacappGrabaciones/";
+
         } catch (Exception e) {
             Log.d("SC", "FUCKED UP " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
     }
+
+
+    public void start(View view){
+        Log.d("DBG", "Start recording" );
+        Log.d("DBG",  outputFile );
+
+        try {
+            if(!nameText.getText().toString().equals("- -")) {
+                Log.d("DBG", "entro con " + spinner.getSelectedItem() + "/" + cowNumberText.getText().toString());
+                File output = new File(outputFile + spinner.getSelectedItem() + "/");
+                if (!output.exists()) {
+                    output.mkdirs();
+                }
+                outputPlayFile = output.getAbsolutePath() + "/" + cowNumberText.getText().toString() + ".3gpp";
+                myRecorder.setOutputFile(outputPlayFile);
+                myRecorder.prepare();
+                myRecorder.start();
+
+                rectext.setText("Recording Point: Recording");
+                startBtn.setEnabled(false);
+                stopBtn.setEnabled(true);
+
+            }
+            else
+            {
+                Utilities.showDialog("Error","Por favor seleccionar una vaca válida del sistema",this);
+            }
+        } catch (IllegalStateException e) {
+            // start:it is called before prepare()
+            // prepare: it is called after start() or before setOutputFormat()
+            e.printStackTrace();
+        } catch (IOException e) {
+            // prepare() fails
+            e.printStackTrace();
+        }
+
+        /*text.setText("Recording Point: Recording");
+        startBtn.setEnabled(false);
+        stopBtn.setEnabled(true);
+
+        Toast.makeText(getApplicationContext(), "Start recording...",
+                Toast.LENGTH_SHORT).show();*/
+    }
+
+    public void stop(View view){
+        Log.d("DBG", "Stop recording" );
+        try {
+            myRecorder.stop();
+            myRecorder.release();
+            myRecorder  = null;
+
+            stopBtn.setEnabled(false);
+            playBtn.setEnabled(true);
+            rectext.setText("Recording Point: Stop recording");
+
+            /*text.setText("Recording Point: Stop recording");
+
+            Toast.makeText(getApplicationContext(), "Stop recording...",
+                    Toast.LENGTH_SHORT).show();*/
+        } catch (IllegalStateException e) {
+            //  it is called before start()
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            // no valid audio/video data has been received
+            e.printStackTrace();
+        }
+    }
+
+    public void play(View view) {
+        try{
+
+            if(!nameText.getText().toString().equals("- -")) {
+                File output = new File(outputFile + spinner.getSelectedItem() + "/");
+                outputPlayFile = output.getAbsolutePath() + "/" + cowNumberText.getText().toString() + ".3gpp";
+                myPlayer = new MediaPlayer();
+                myPlayer.setDataSource(outputPlayFile);
+                myPlayer.prepare();
+                myPlayer.start();
+
+                playBtn.setEnabled(false);
+                detenerReproduccion.setEnabled(true);
+                rectext.setText("Recording Point: Playing");
+
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void stopPlay(View view) {
+        try {
+            if (myPlayer != null) {
+                myPlayer.stop();
+                myPlayer.release();
+                myPlayer = null;
+                playBtn.setEnabled(true);
+                detenerReproduccion.setEnabled(false);
+                rectext.setText("Recording Point: Stop playing");
+
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     @Override
     public void onResume() {
