@@ -14,85 +14,91 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="112dp"
+        android:layout_height="90dp"
         android:orientation="horizontal"
-        android:layout_gravity="right|bottom">
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="32dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginLeft="24dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:id="@+id/linearLayout3"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true">
+            android:layout_weight="1"
+            android:layout_marginLeft="45dp">
             <Button
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:id="@+id/add_button"
                 android:background="@drawable/cow_add_layout"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="30dp"
-                android:layout_gravity="bottom" />
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="24dp" />
             <Button
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:id="@+id/recog_button"
                 android:background="@drawable/cow_eye_layout"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="60dp"
-                android:layout_gravity="bottom" />
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="24dp" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cloudButton"
+                android:background="@drawable/cloud_layout"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="24dp" />
 
         </LinearLayout>
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:id="@+id/linearLayout2"
-            android:layout_marginRight="43dp"
-            android:layout_marginEnd="43dp"
             android:gravity="bottom"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
+            android:layout_weight="0.725"
+            android:layout_marginRight="45dp">
 
             <Button
-                android:layout_width="86dp"
-                android:layout_height="86dp"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/detailButton"
+                android:background="@drawable/detail_layout"
+                android:layout_gravity="center_vertical|left"
+                android:layout_weight="1"
+                android:gravity="center_vertical|left" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.85" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
 
                 android:id="@+id/shutter_button"
                 android:background="@drawable/shutter_layout"
-                android:layout_marginBottom="15dp"
-                android:layout_marginRight="30dp"
                 android:layout_gravity="center_vertical"
-                android:gravity="bottom" />
+                android:gravity="bottom"
+                android:layout_weight="1"
+                android:layout_marginBottom="4dp" />
+
         </LinearLayout>
 
-        <Button
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:id="@+id/cloudButton"
-            android:background="@drawable/cloud_layout"
-            android:layout_gravity="center_vertical"
-            android:layout_alignTop="@+id/detailButton"
-            android:layout_toRightOf="@+id/detailButton"
-            android:layout_toEndOf="@+id/detailButton"
-            android:layout_marginLeft="85dp"
-            android:layout_marginStart="85dp" />
 
-        <Button
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:id="@+id/detailButton"
-            android:background="@drawable/detail_layout"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="145dp"
-            android:layout_marginStart="145dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/linearLayout3"
-            android:layout_toEndOf="@+id/linearLayout3" />
-
-
-    </RelativeLayout>
+    </LinearLayout>
 </FrameLayout>
