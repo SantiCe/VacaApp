@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.location.Location;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -12,17 +15,23 @@ import android.util.Log;
 import android.view.Display;
 
 import com.example.keinsfield.vacapp.ImageMatcher.Scene;
+import com.google.android.gms.maps.model.LatLng;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static java.lang.String.valueOf;
 
@@ -30,7 +39,7 @@ import static java.lang.String.valueOf;
  * Created by Galapagos on 11/09/2015.
  */
 public class Utilities {
-
+    public static final LatLng ubate = new LatLng(5.315846, -73.820219);
     private static TessBaseAPI tessBaseAPI = new TessBaseAPI();
     static{
         tessBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, "1234567890");
@@ -131,10 +140,55 @@ public class Utilities {
                 File file = new File(root,key.farm);
                 if(!file.exists() && file.mkdir()) ret.add(key.farm);
             }
+
+            for(String s:ret){
+                File info = new File(root,s);
+                if(!info.exists() && !info.isDirectory()) continue;
+                info = new File(info,"info.txt");
+                if(!info.exists()){
+                    try{
+                        Log.d("SC","Setting location for "+s);
+                        PrintWriter pw = new PrintWriter(info);
+                        pw.println(ubate.latitude+" "+ubate.longitude);
+                        pw.close();
+                    }
+                    catch(Exception e){
+
+                    }
+                }
+            }
             return ret;
         }
     }
 
+    public static Location getFarmLocation(String farm, Activity caller){
+
+        try {
+            List<String> farms = GetFarms(caller);
+            if (!farms.contains(farm)) return null;
+            else{
+                File root = GetStorageDirectory(caller);
+                for (String f : farms) {
+                    if (farm.equals(f)) {
+                        File fileFarm = new File(root, f);
+                        fileFarm = new File(fileFarm,"info.txt");
+                        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileFarm)));
+                        String[] sp = br.readLine().split(" ");
+                        double lat = Double.parseDouble(sp[0]);
+                        double lon = Double.parseDouble(sp[1]);
+                        Location loc = new Location(farm);
+                        loc.setLatitude(lat);
+                        loc.setLongitude(lon);
+                        return loc;
+                    }
+                }
+            }
+        }
+        catch(Exception e){
+            Log.d("SC","Failed to retrieve farm location info for: "+farm);
+        }
+        return null;
+    }
     //Returns all vacapp images in the phone storage, organized by farm.
     public static HashMap<String,ArrayList<File>> getAllVacappImages(Activity caller){
         File root = Utilities.GetStorageDirectory(caller);

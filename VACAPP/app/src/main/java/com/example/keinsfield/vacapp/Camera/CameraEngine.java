@@ -70,7 +70,12 @@ public class CameraEngine {
             Camera.Size size = sizes.get(Integer.valueOf((sizes.size() - 1) / 2)); //choose a medium resolution
             params.setPictureSize(size.width, size.height);
             camera.setParameters(params);
-            params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+            if(params.getSupportedFocusModes() != null && params.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
+                params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+            }
+            else{
+                Log.d("SC","Camera does not support ContinuesPicture.");
+            }
             this.camera.setParameters(params);
             this.camera.setPreviewDisplay(this.surfaceHolder);
             this.camera.startPreview();

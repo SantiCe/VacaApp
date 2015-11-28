@@ -1,12 +1,14 @@
 package com.example.keinsfield.vacapp.Activities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +31,6 @@ import java.util.HashMap;
 public class CowDetailActivity extends Activity {
     private static final int PROGRESS_ID = 0;
     private EditText nameText, textUltimoParto, textHato, textLoc, textPartos, textDiasLac, textLitros, textPrimerServicio;
-    private String lastName, lastUltimoP, lastHato, lastLoc, lastPartos, lastDiasLac, lastLitros, lastPrimerServ;
     private EditText cowNumberText;
     private int currCowNumber;
     private String currFinca;
@@ -37,9 +38,11 @@ public class CowDetailActivity extends Activity {
     private ArrayAdapter<String> arrayAdapter;
     private Button editButton, saveButton, cancelButton, findButton;
     private ImageView imageView;
-    private ProgressDialog progressDialog;
-    private ArrayList<EditText> editTexts
-            ;
+    private ArrayList<EditText> editTexts;
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+    private boolean onEditMode = false;
 
     private void setUnknown(boolean updateImage) {
         String s = "";
@@ -117,11 +120,44 @@ public class CowDetailActivity extends Activity {
             setUnknown(true);
             disableAllTexts();
 
+            //Shake detection:http://jasonmcreynolds.com/?p=388
+            // ShakeDetector initialization
+            mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            mAccelerometer = mSensorManager
+                    .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            mShakeDetector = new ShakeDetector();
+            mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+
+                @Override
+                public void onShake(int count) {
+				/*
+				 * The following method, "handleShakeEvent(count):" is a stub //
+				 * method you would use to setup whatever you want done once the
+				 * device has been shook.
+				 */
+                    if(onEditMode) onCancelClick(null);
+                }
+            });
+
         } catch (Exception e) {
             Log.d("SC", "FUCKED UP " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 
     public void onFindClick(View v) {
@@ -163,30 +199,21 @@ public class CowDetailActivity extends Activity {
         setUnknown(true);
         if (cow.nombre.isEmpty()) {
             nameText.setText("No name specificed.");
-            lastName="";
         }
         else {
             nameText.setText(cow.nombre);
-            lastName=cow.nombre;
         }
         textUltimoParto.setText(cow.ultimo_parto);
-        lastUltimoP = cow.ultimo_parto;
         String s = (cow.hato == -1) ? "" : cow.hato + "";
         textHato.setText(s);
-        lastHato=s;
-        textLoc.setText(cow.loc);
-        lastLoc=cow.loc;
+         textLoc.setText(cow.loc);
         s = (cow.partos == -1) ? "" : cow.partos + "";
         textPartos.setText(s);
-        lastPartos=s;
         s = (cow.dias_lac == -1) ? "" : cow.dias_lac + "";
         textDiasLac.setText(s);
-        lastDiasLac=s;
         textPrimerServicio.setText(cow.primer_servicio);
-        lastPrimerServ=cow.primer_servicio;
         s = (cow.lts_dia == -1) ? "" : cow.lts_dia + "";
         textLitros.setText(s);
-        lastLitros=s;
 
         //Look for image.
         File farm = new File(Utilities.GetStorageDirectory(this), cow.finca);
@@ -232,6 +259,7 @@ public class CowDetailActivity extends Activity {
         saveButton.setVisibility(View.INVISIBLE);
         cancelButton.setVisibility(View.INVISIBLE);
         enableView(findButton);
+        onEditMode = false;
 
     }
 
@@ -246,6 +274,7 @@ public class CowDetailActivity extends Activity {
         disableView(cowNumberText);
         disableView(spinner);
         disableView(findButton);
+        onEditMode = true;
     }
 
     public void onSaveClick(View view){

@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:weightSum="5"
-        >
+        android:background="@drawable/border_layout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,10 +22,12 @@
             android:id="@+id/textViewAgregarNuevaFinca"
             android:onClick="OnBackButton"
             android:layout_weight="1"
-            android:layout_margin="@dimen/activity_vertical_margin"
             style="@style/AppTheme"
             android:textIsSelectable="false"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/LightBlue"
+            android:layout_marginTop="@dimen/activity_tight_margin"
+            android:layout_gravity="center" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,87 +36,104 @@
             android:text="Nombre de la finca"
             android:id="@+id/textViewNuevaFinca"
             android:onClick="OnBackButton"
-            android:layout_weight="1"
+            android:layout_weight="0.35"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
             style="@style/AppTheme"
             android:textIsSelectable="false"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_gravity="center_vertical" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/farmText"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/activity_large_margin"
+            android:layout_weight="0.5"
             android:text="Nombre finca"
             android:background="#FFFFFF"
-            android:inputType="text" />
+            android:inputType="text"
+            android:layout_marginLeft="@dimen/activity_large_margin"
+            android:layout_marginRight="@dimen/activity_large_margin"
+            android:layout_marginTop="@dimen/activity_tight_margin"
+            android:layout_marginBottom="@dimen/activity_tight_margin" />
 
-        <Space
-            android:layout_width="match_parent"
+        <ImageButton
+            android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:id="@+id/mapButton"
+            android:layout_weight="2"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:src="@drawable/map_button"
+            android:contentDescription=""
+            android:scaleType="fitCenter"
+            android:background="@color/almost_black_gray"
+            android:onClick="onMapButton" />
 
-        <RelativeLayout
+        <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_weight="2"
-            >
+            android:layout_height="0dp"
+            android:layout_weight="1.75"
+            android:layout_margin="@dimen/activity_tight_margin">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/addFarmButton"
-                android:background="@drawable/check_layout"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:onClick="OnSaveButton"
-                />
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/checkButton"
+                android:layout_weight="1"
+                android:src="@drawable/check_big"
+                android:scaleType="fitCenter"
+                android:background="@color/almost_black_gray"
+                android:onClick="OnSaveButton" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/backButtonFarm"
-                android:background="@drawable/back_big"
-                android:layout_alignParentRight="true"
-                android:onClick="OnBackButton"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.75" />
 
-                />
-        </RelativeLayout>
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageButton3"
+                android:layout_weight="1"
+                android:src="@drawable/back_big"
+                android:scaleType="fitCenter"
+                android:background="@color/almost_black_gray"
+                android:onClick="OnBackButton" />
 
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@drawable/border_layout_grey">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Ver fincas en el sistema"
             android:id="@+id/verfincas"
-            android:layout_weight="1"
-            android:layout_marginTop="75dp"
+            android:layout_weight="1.5"
+            android:layout_marginTop="@dimen/activity_tight_margin"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
             style="@style/AppTheme"
             android:textIsSelectable="false"
             android:textStyle="bold" />
         <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
             android:id="@+id/farmListView"
             android:layout_margin="@dimen/activity_large_margin"
             android:background="@color/white"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:layout_weight="10" />
     </LinearLayout>
 
 
