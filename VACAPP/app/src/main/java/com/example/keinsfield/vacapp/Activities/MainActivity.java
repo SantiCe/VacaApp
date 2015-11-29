@@ -15,6 +15,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.keinsfield.vacapp.Camera.CameraEngine;
 import com.example.keinsfield.vacapp.Images.Tools;
@@ -56,7 +57,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
     Bitmap numberBmp;
     File fullPicFile;
     Button detailButton;
-
+    private LightSensor lightSensor;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
@@ -104,6 +105,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
                 if(photoTaken) onClick(shutterButton);
             }
         });
+
+        lightSensor = new LightSensor(this);
         }
 
 
@@ -168,7 +171,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
             }
         }
 
-        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -189,7 +192,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         if (v == shutterButton) {
             if (cameraEngine != null && cameraEngine.isOn()) {
                 if(!photoTaken) {
-                    cameraEngine.takeShot(this, this, this);
+                    Log.d("SCLight","Curr light: "+lightSensor.light);
+                    if(lightSensor.light <= LightSensor.FLASH_THOLD){
+                        cameraEngine.takeShotWithFlash(this,this,this);
+                        Toast.makeText(this,"Low light setting detected. Activated night mode.",Toast.LENGTH_SHORT).show();
+                    }
+
+                    else
+                        cameraEngine.takeShot(this, this, this);
                     shutterButton.setBackgroundResource(R.drawable.back);
                     photoTaken = true;
                 }
@@ -264,7 +274,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
 
         }
     }
-
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
 

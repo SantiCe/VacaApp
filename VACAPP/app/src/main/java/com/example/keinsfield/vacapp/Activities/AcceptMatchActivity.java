@@ -1,6 +1,5 @@
 package com.example.keinsfield.vacapp.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import com.example.keinsfield.vacapp.R;
 
 import java.io.File;
 
-public class AcceptMatchActivity extends Activity {
+public class AcceptMatchActivity extends TiltDetectingActivity {
 
     public static final int ACCEPT = 0;
     public static final int REMATCH = 1;
@@ -39,6 +38,15 @@ public class AcceptMatchActivity extends Activity {
 
         TextView tv = (TextView)findViewById(R.id.lblMejorMatch);
         tv.setText("Mejor match: "+new File(match).getName());
+    }
+
+    @Override
+    public void tiltedUpward() {
+        onAcceptButton(null);
+    }
+
+    public void tiltedDownward(){
+        onRematchButton(null);
     }
 
     @Override

@@ -64,7 +64,7 @@ public class AddCowActivity extends Activity implements GoogleApiClient.Connecti
             RandomAccessFile f = new RandomAccessFile(filePath, "r");
             byte[] data = new byte[(int) f.length()];
             f.read(data);
-            image = Utilities.byteArrayToBitmap(data,this,0.8,0.4);
+            image = Utilities.byteArrayToBitmap(data,this,0.33,0.33);
             if (image != null) {
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageBitmap(image);

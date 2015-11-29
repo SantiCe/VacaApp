@@ -110,4 +110,24 @@ public class CameraEngine {
         }
     }
 
+    public void takeShotWithFlash(Camera.ShutterCallback shutterCallback,
+                                  Camera.PictureCallback rawPictureCallback,
+                                  Camera.PictureCallback jpegPictureCallback){
+        if(!isOn()) return;
+        Log.d("SC","Taking pic with flash.");
+        Camera.Parameters params = camera.getParameters();
+        if(params.getSupportedSceneModes() != null && params.getSupportedSceneModes().contains(Camera.Parameters.SCENE_MODE_NIGHT))
+            params.setSceneMode(Camera.Parameters.SCENE_MODE_NIGHT);
+        if(params.getSupportedFlashModes() != null && params.getSupportedFlashModes().contains(Camera.Parameters.FLASH_MODE_ON))
+            params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+        camera.setParameters(params);
+        takeShot(shutterCallback,
+                rawPictureCallback,
+                jpegPictureCallback);
+        if(params.getSupportedSceneModes() != null && params.getSupportedSceneModes().contains(Camera.Parameters.SCENE_MODE_AUTO))
+            params.setSceneMode(Camera.Parameters.SCENE_MODE_AUTO);
+        if(params.getSupportedFlashModes() != null && params.getSupportedFlashModes().contains(Camera.Parameters.FLASH_MODE_OFF))
+            params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+    }
+
 }
