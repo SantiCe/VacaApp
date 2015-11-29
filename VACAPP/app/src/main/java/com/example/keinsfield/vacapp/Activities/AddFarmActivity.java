@@ -69,7 +69,7 @@ public class AddFarmActivity extends Activity {
             return;
         }
         ArrayList<String> farms = Utilities.GetFarms(this);
-        File root = Utilities.GetStorageDirectory(this);
+        File root = Utilities.GetPictureStorageDirectory(this);
         File dir = new File(root,t);
 
         dir.mkdirs();

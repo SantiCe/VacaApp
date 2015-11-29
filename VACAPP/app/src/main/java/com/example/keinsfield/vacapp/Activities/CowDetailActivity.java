@@ -2,14 +2,16 @@ package com.example.keinsfield.vacapp.Activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.keinsfield.vacapp.Mundo.Cow;
 import com.example.keinsfield.vacapp.Mundo.CowKey;
@@ -26,20 +29,16 @@ import com.example.keinsfield.vacapp.Mundo.Utilities;
 import com.example.keinsfield.vacapp.R;
 
 import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import android.widget.Button;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 
 
 public class CowDetailActivity extends Activity {
+    public static final String VN_DIR = "VacappGrabaciones";
     private static final int PROGRESS_ID = 0;
     private EditText nameText, textUltimoParto, textHato, textLoc, textPartos, textDiasLac, textLitros, textPrimerServicio;
     private EditText cowNumberText;
-    private int currCowNumber;
+    private int currCowNumber=-1;
     private String currFinca;
     private Spinner spinner;
     private ArrayAdapter<String> arrayAdapter;
@@ -93,6 +92,16 @@ public class CowDetailActivity extends Activity {
         //view.setFocusable(true);
         //view.setClickable(true);
     }
+
+    private void disableAndHide(Button b){
+        b.setVisibility(View.INVISIBLE);
+        disableView(b);
+    }
+
+    private void enableAndShow(Button b){
+        b.setVisibility(View.VISIBLE);
+        enableView(b);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +141,10 @@ public class CowDetailActivity extends Activity {
 
         rectext = (TextView) findViewById(R.id.rectext);
 
+        disableAndHide(startBtn);
+        disableAndHide(stopBtn);
+        disableAndHide(playBtn);
+        disableAndHide(detenerReproduccion);
 
         try {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -163,12 +176,9 @@ public class CowDetailActivity extends Activity {
             cancelButton = (Button)findViewById(R.id.cancelButton);
             findButton = (Button)findViewById(R.id.buttonFind);
 
-            saveButton.setVisibility(View.INVISIBLE);
-            disableView(saveButton);
-            cancelButton.setVisibility(View.INVISIBLE);
-            disableView(cancelButton);
-            editButton.setVisibility(View.INVISIBLE);
-            disableView(editButton);
+            disableAndHide(saveButton);
+            disableAndHide(cancelButton);
+            disableAndHide(editButton);
             setUnknown(true);
             disableAllTexts();
 
@@ -182,12 +192,8 @@ public class CowDetailActivity extends Activity {
 
                 @Override
                 public void onShake(int count) {
-				/*
-				 * The following method, "handleShakeEvent(count):" is a stub //
-				 * method you would use to setup whatever you want done once the
-				 * device has been shook.
-				 */
-                    if(onEditMode) onCancelClick(null);
+
+                    if (onEditMode) onCancelClick(null);
                 }
             });
 
@@ -197,12 +203,18 @@ public class CowDetailActivity extends Activity {
 
             myRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             myRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-            outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/VacappGrabaciones/";
-
+            outputFile = Utilities.getVoiceNoteStorageDirectory(this).toString() + "/";
+            File dir = new File(outputFile);
+            if(!dir.exists()) dir.mkdir();
         } catch (Exception e) {
             Log.d("SC", "FUCKED UP " + e.getMessage());
             e.printStackTrace();
-            throw e;
+            try{
+                throw e;
+            }
+            catch(Exception lol){
+                Log.d("SC","RELOL");
+            }
         }
     }
 
@@ -212,33 +224,29 @@ public class CowDetailActivity extends Activity {
         Log.d("DBG",  outputFile );
 
         try {
-            if(!nameText.getText().toString().equals("- -")) {
-                Log.d("DBG", "entro con " + spinner.getSelectedItem() + "/" + cowNumberText.getText().toString());
-                File output = new File(outputFile + spinner.getSelectedItem() + "/");
-                if (!output.exists()) {
-                    output.mkdirs();
-                }
-                outputPlayFile = output.getAbsolutePath() + "/" + cowNumberText.getText().toString() + ".3gpp";
+            if(currCowNumber != -1) {
+                myRecorder = new MediaRecorder();
+                myRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+
+                myRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                myRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+                outputPlayFile = getVoiceNoteFile(currCowNumber,currFinca).toString();
                 myRecorder.setOutputFile(outputPlayFile);
                 myRecorder.prepare();
                 myRecorder.start();
 
                 rectext.setText("Recording Point: Recording");
-                startBtn.setEnabled(false);
-                stopBtn.setEnabled(true);
+                disableAndHide(startBtn);
+                enableAndShow(stopBtn);
+                disableAndHide(playBtn);
 
             }
             else
             {
                 Utilities.showDialog("Error","Por favor seleccionar una vaca válida del sistema",this);
             }
-        } catch (IllegalStateException e) {
-            // start:it is called before prepare()
-            // prepare: it is called after start() or before setOutputFormat()
-            e.printStackTrace();
-        } catch (IOException e) {
-            // prepare() fails
-            e.printStackTrace();
+        }  catch (Exception e) {
+            Utilities.showDialog("Error","Error iniciando grabacion. "+e.getMessage(),this);
         }
 
         /*text.setText("Recording Point: Recording");
@@ -256,8 +264,9 @@ public class CowDetailActivity extends Activity {
             myRecorder.release();
             myRecorder  = null;
 
-            stopBtn.setEnabled(false);
-            playBtn.setEnabled(true);
+            disableAndHide(stopBtn);
+            enableAndShow(startBtn);
+            enableAndShow(playBtn);
             rectext.setText("Recording Point: Stop recording");
 
             /*text.setText("Recording Point: Stop recording");
@@ -272,20 +281,32 @@ public class CowDetailActivity extends Activity {
             e.printStackTrace();
         }
     }
+    private File getVoiceNoteFile(int cowN, String farm){
+        try {
+            File output = new File(outputFile, farm);
+            if(!output.exists())output.mkdir();
+            output = new File(output,cowN+".3gpp");
+            return output;
+        }
+        catch(Exception e){
+            return null;
+        }
+    }
+
 
     public void play(View view) {
         try{
 
             if(!nameText.getText().toString().equals("- -")) {
-                File output = new File(outputFile + spinner.getSelectedItem() + "/");
-                outputPlayFile = output.getAbsolutePath() + "/" + cowNumberText.getText().toString() + ".3gpp";
+                outputPlayFile = getVoiceNoteFile(currCowNumber, currFinca).toString();
                 myPlayer = new MediaPlayer();
                 myPlayer.setDataSource(outputPlayFile);
                 myPlayer.prepare();
                 myPlayer.start();
 
-                playBtn.setEnabled(false);
-                detenerReproduccion.setEnabled(true);
+                disableAndHide(playBtn);
+                disableAndHide(startBtn);
+                enableAndShow(detenerReproduccion);
                 rectext.setText("Recording Point: Playing");
 
             }
@@ -302,8 +323,9 @@ public class CowDetailActivity extends Activity {
                 myPlayer.stop();
                 myPlayer.release();
                 myPlayer = null;
-                playBtn.setEnabled(true);
-                detenerReproduccion.setEnabled(false);
+                enableAndShow(playBtn);
+                enableAndShow(startBtn);
+                disableAndHide(detenerReproduccion);
                 rectext.setText("Recording Point: Stop playing");
 
             }
@@ -346,26 +368,31 @@ public class CowDetailActivity extends Activity {
         for (CowKey ckey : cows.keySet()) {
             Log.d("SC", "CKEY: " + ckey.nv + "," + ckey.farm + " " + ckey.equals(key));
         }
-        //If no cow is found, don't show the edit buttons.
+        //If no cow is found, don't show the edit buttons, nor the mic buttons.
         if (!cows.containsKey(key)) {
             setUnknown(true);
             Utilities.showDialog("Busqueda finalizada", "No se encontro ninguna vaca con numero " + nv + " en la finca " + finca + ".", this);
-            editButton.setVisibility(View.INVISIBLE);
-            disableView(editButton);
+            disableAndHide(editButton);
+            disableAndHide(startBtn);
+            disableAndHide(stopBtn);
+            disableAndHide(detenerReproduccion);
+            disableAndHide(playBtn);
             return;
         }
         disableAllTexts();
-        editButton.setVisibility(View.VISIBLE);
-        enableView(editButton);
+        //If a cow is found, show the edit and record/play buttons.
+
         currCowNumber = nv;
         currFinca = finca;
+        enableAndShow(editButton);
+        enableAndShow(startBtn);
+        if(getVoiceNoteFile(currCowNumber,currFinca) != null && getVoiceNoteFile(currCowNumber,currFinca).exists())enableAndShow(playBtn);
         Cow cow = cows.get(key);
         updateCow(cow);
     }
 
     private void updateCow(Cow cow) {
-        editButton.setVisibility(View.VISIBLE);
-        enableView(editButton);
+        enableAndShow(editButton);
         setUnknown(true);
         if (cow.nombre.isEmpty()) {
             nameText.setText("No name specificed.");
@@ -386,7 +413,7 @@ public class CowDetailActivity extends Activity {
         textLitros.setText(s);
 
         //Look for image.
-        File farm = new File(Utilities.GetStorageDirectory(this), cow.finca);
+        File farm = new File(Utilities.GetPictureStorageDirectory(this), cow.finca);
         if (!farm.exists() || !farm.isDirectory()) imageView.setImageResource(R.drawable.app_icon);
         else {
             for (File file : farm.listFiles()) {
@@ -424,23 +451,19 @@ public class CowDetailActivity extends Activity {
         enableView(cowNumberText);
         enableView(spinner);
         disableAllTexts();
-        disableView(saveButton);
+        disableAndHide(saveButton);
+        disableAndHide(cancelButton);
         disableView(cancelButton);
-        saveButton.setVisibility(View.INVISIBLE);
-        cancelButton.setVisibility(View.INVISIBLE);
-        enableView(findButton);
+        enableAndShow(findButton);
         onEditMode = false;
 
     }
 
     public void onEditClick(View v){
         enableAllTexts();
-        saveButton.setVisibility(View.VISIBLE);
-        enableView(saveButton);
-        cancelButton.setVisibility(View.VISIBLE);
-        disableView(editButton);
-        editButton.setVisibility(View.INVISIBLE);
-        enableView(cancelButton);
+        enableAndShow(saveButton);
+        disableAndHide(editButton);
+        enableAndShow(cancelButton);
         disableView(cowNumberText);
         disableView(spinner);
         disableView(findButton);

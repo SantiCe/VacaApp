@@ -152,7 +152,7 @@ public class AddCowActivity extends Activity implements GoogleApiClient.Connecti
         }
         String farm = spinner.getSelectedItem().toString();
 
-        File rootFolder = Utilities.GetStorageDirectory(this);
+        File rootFolder = Utilities.GetPictureStorageDirectory(this);
         //Log.d("SC","Root: "+rootFolder.toString());
         String folderName = farm;
         int number = -1;

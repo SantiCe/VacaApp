@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
 
+import com.example.keinsfield.vacapp.Activities.CowDetailActivity;
 import com.example.keinsfield.vacapp.ImageMatcher.Scene;
 import com.google.android.gms.maps.model.LatLng;
 import com.googlecode.tesseract.android.TessBaseAPI;
@@ -80,12 +81,43 @@ public class Utilities {
                 });
     }
 
+    public static File getVoiceNoteStorageDirectory(Activity caller) throws Exception{
+        try{
+            // Intente primero hacer un directorio publico en la memoria externa.
+            String state = Environment.getExternalStorageState();
+            if (Environment.MEDIA_MOUNTED.equals(state)){
+
+                File album = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"VACAPP_Voicenotes");
+                if(!album.mkdirs() && !album.isDirectory() && !album.exists()){
+                    // If directory can't be created in public external storage, try private external storage.
+                    album = caller.getExternalFilesDir(null);
+                    album = new File(album,"VACAPP_Voicenotes");
+                    if(!album.mkdirs() && !album.isDirectory() && !album.exists()){
+                        File file = caller.getDir("VACAPP", Context.MODE_PRIVATE);
+                        if(!file.exists()) file.mkdirs();
+                        return file;
+                    }
+                }
+                return album;
+            }
+            else{
+                File file = caller.getDir("VACAPP", Context.MODE_PRIVATE);
+                file = new File(file,"voicenotes");
+                if(!file.exists() || !file.isDirectory()) file.mkdirs();
+                return file;
+            }
+        }
+        catch(Exception e){
+            Log.d("SC", e.getMessage());
+            throw e;
+        }
+    }
     /**
      *
      * @return The external storage directory where the App is saving its pictures.
      * If the returned value is null, there is no external storage available for R/W.
      */
-    public static File GetStorageDirectory(Activity caller, boolean temp){
+    public static File GetPictureStorageDirectory(Activity caller, boolean temp){
         try{
             // Intente primero hacer un directorio publico en la memoria externa.
             String state = Environment.getExternalStorageState();
@@ -118,19 +150,19 @@ public class Utilities {
         }
     }
 
-    public static File GetStorageDirectory(Activity caller){
-        return GetStorageDirectory(caller,false);
+    public static File GetPictureStorageDirectory(Activity caller){
+        return GetPictureStorageDirectory(caller, false);
     }
 
     public static ArrayList<String> GetFarms(Activity caller){
         ArrayList<String> ret = new ArrayList<>();
-        File root = GetStorageDirectory(caller);
+        File root = GetPictureStorageDirectory(caller);
         if(root == null) return ret;
         else{
 
             File[] files = root.listFiles();
             for(File file:files){
-                if(file.isDirectory()){
+                if(file.isDirectory() && !file.getName().equals(CowDetailActivity.VN_DIR)){
                     ret.add(file.getName());
                 }
             }
@@ -142,6 +174,7 @@ public class Utilities {
             }
 
             for(String s:ret){
+
                 File info = new File(root,s);
                 if(!info.exists() && !info.isDirectory()) continue;
                 info = new File(info,"info.txt");
@@ -167,7 +200,7 @@ public class Utilities {
             List<String> farms = GetFarms(caller);
             if (!farms.contains(farm)) return null;
             else{
-                File root = GetStorageDirectory(caller);
+                File root = GetPictureStorageDirectory(caller);
                 for (String f : farms) {
                     if (farm.equals(f)) {
                         File fileFarm = new File(root, f);
@@ -191,7 +224,7 @@ public class Utilities {
     }
     //Returns all vacapp images in the phone storage, organized by farm.
     public static HashMap<String,ArrayList<File>> getAllVacappImages(Activity caller){
-        File root = Utilities.GetStorageDirectory(caller);
+        File root = Utilities.GetPictureStorageDirectory(caller);
         ArrayList<String> farmList = Utilities.GetFarms(caller);
         HashMap<String,ArrayList<File>> files = new HashMap<>();
         Log.d("SC","Entering farms loop.");
@@ -345,7 +378,7 @@ public class Utilities {
     }
 
     public static File getCowBD(Activity context){
-        File root = GetStorageDirectory(context);
+        File root = GetPictureStorageDirectory(context);
         File look = new File(root,"cowBD.cow");
         return look;
     }

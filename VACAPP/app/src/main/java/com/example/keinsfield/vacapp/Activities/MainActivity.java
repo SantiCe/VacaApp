@@ -167,6 +167,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
                 e.printStackTrace();
             }
         }
+
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -179,6 +181,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         }
         SurfaceHolder surfaceHolder = cameraFrame.getHolder();
         surfaceHolder.removeCallback(this);
+        mSensorManager.unregisterListener(mShakeDetector);
     }
     AlertDialog alertDialog;
     @Override
@@ -275,7 +278,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         if(focusBox.getBox()==null)
             Log.d(TAG, "NULL");
         numberBmp = Tools.getFocusedBitmap(this, camera, data, focusBox.getBox());
-        File dir = Utilities.GetStorageDirectory(this,true);
+        File dir = Utilities.GetPictureStorageDirectory(this, true);
         fullPicFile = new File(dir,"tmpimg");
         if(fullPicFile.exists()) fullPicFile.delete();
         boolean success = false;

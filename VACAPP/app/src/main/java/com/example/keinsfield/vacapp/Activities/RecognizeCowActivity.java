@@ -180,7 +180,7 @@ public class RecognizeCowActivity extends Activity {
     }
 
     public void onMatchClick(View v){
-        File root = Utilities.GetStorageDirectory(this);
+        File root = Utilities.GetPictureStorageDirectory(this);
 
         // If files is null then there was no previous matching call made or the reset button was pressed.
         if(files == null){
