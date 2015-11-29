@@ -15,47 +15,50 @@
         android:background="@drawable/border_layout">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Agregar finca al sistema "
             android:id="@+id/textViewAgregarNuevaFinca"
             android:onClick="OnBackButton"
-            android:layout_weight="1"
+            android:layout_weight="2.5"
             style="@style/AppTheme"
             android:textIsSelectable="false"
             android:textStyle="bold"
             android:textColor="@color/LightBlue"
-            android:layout_marginTop="@dimen/activity_tight_margin"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/activity_large_margin"
+            android:textSize="44dp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
             android:text="Nombre de la finca"
             android:id="@+id/textViewNuevaFinca"
             android:onClick="OnBackButton"
-            android:layout_weight="0.35"
+            android:layout_weight="0.5"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
             style="@style/AppTheme"
             android:textIsSelectable="false"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            android:textSize="32dp"
+            android:layout_margin="16dp" />
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:id="@+id/farmText"
-            android:layout_weight="0.5"
+            android:layout_weight="0.75"
             android:text="Nombre finca"
             android:background="#FFFFFF"
             android:inputType="text"
             android:layout_marginLeft="@dimen/activity_large_margin"
             android:layout_marginRight="@dimen/activity_large_margin"
-            android:layout_marginTop="@dimen/activity_tight_margin"
-            android:layout_marginBottom="@dimen/activity_tight_margin" />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="32dp" />
 
         <ImageButton
             android:layout_width="fill_parent"
@@ -69,41 +72,49 @@
             android:contentDescription=""
             android:scaleType="fitCenter"
             android:background="@color/almost_black_gray"
-            android:onClick="onMapButton" />
+            android:onClick="onMapButton"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.75"
-            android:layout_margin="@dimen/activity_tight_margin">
+            android:layout_weight="1.7"
+            android:layout_marginTop="@dimen/activity_large_margin"
+            android:layout_marginBottom="32dp"
+            android:layout_marginRight="@dimen/activity_large_margin"
+            android:layout_marginLeft="@dimen/activity_large_margin" >
 
             <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:id="@+id/checkButton"
+                android:layout_height="match_parent"
+                android:id="@+id/imageButton"
+                android:layout_alignParentLeft="true"
+                android:onClick="SaveCow"
                 android:layout_weight="1"
-                android:src="@drawable/check_big"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:background="@color/almost_black_gray"
-                android:onClick="OnSaveButton" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="0.75" />
+                android:background="#273024"
+                android:src="@drawable/check_layout"
+                android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
             <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:id="@+id/imageButton3"
+                android:layout_height="match_parent"
+                android:id="@+id/imageButton2"
+                android:layout_alignParentRight="true"
+                android:onClick="BackToMain"
                 android:layout_weight="1"
-                android:src="@drawable/back_big"
+                android:layout_gravity="center|right"
+                android:src="@drawable/back_layout"
+                android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:background="@color/almost_black_gray"
-                android:onClick="OnBackButton" />
-
+                android:background="#302425" />
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -125,7 +136,8 @@
             android:layout_marginLeft="16dp"
             style="@style/AppTheme"
             android:textIsSelectable="false"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="36dp" />
         <ListView
             android:layout_width="fill_parent"
             android:layout_height="0dp"

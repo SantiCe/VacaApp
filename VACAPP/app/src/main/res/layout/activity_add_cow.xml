@@ -59,12 +59,13 @@
 
             <Button
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:id="@+id/addFarmButton"
                 android:layout_weight="0.6"
-                android:background="@drawable/add"
+                android:background="@drawable/add_button"
                 android:onClick="AddFarm"
-                android:layout_marginLeft="5dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
         </LinearLayout>
 
         <TextView
