@@ -141,7 +141,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:layout_marginBottom="@dimen/activity_tight_margin">
+                        android:layout_marginBottom="48dp">
 
                         <TextView
                             android:layout_width="0dp"
@@ -167,7 +167,7 @@
                             android:gravity="center_vertical"
                             android:textColor="@android:color/black"
                             android:inputType="number"
-                            android:layout_marginBottom="@dimen/activity_tight_margin"
+                            android:layout_marginBottom="16dp"
                             android:layout_marginTop="@dimen/activity_tight_margin"
                             android:layout_gravity="center"
                             android:editable="false"
@@ -215,7 +215,6 @@
                     <EditText
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/textPartos"
                         android:layout_weight="1"
                         android:gravity="bottom|left"
@@ -225,8 +224,10 @@
                         android:editable="false"
                         android:inputType="number"
                         android:layout_margin="@dimen/activity_tight_margin"
-                        android:textAlignment="gravity"
-                        android:textSize="12dp" />
+                        android:textSize="8dp"
+                        android:text="12"
+                        android:elegantTextHeight="false"
+                        android:paddingBottom="6.5dp" />
                 </TableRow>
 
                 <TableRow
@@ -251,17 +252,17 @@
                     <EditText
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/textLastParto"
                         android:layout_weight="1"
-                        android:gravity="bottom|left"
                         android:textColor="@android:color/black"
                         android:layout_marginBottom="@dimen/activity_tight_margin"
                         android:layout_gravity="center"
                         android:editable="false"
                         android:inputType="text"
-                        android:textAlignment="gravity"
-                        android:textSize="11dp" />
+                        android:textSize="8dp"
+                        android:text="asdf"
+                        android:gravity="bottom|left"
+                        android:paddingBottom="6.5dp" />
                 </TableRow>
 
                 <TableRow
@@ -286,17 +287,19 @@
                     <EditText
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/textDiasLac"
                         android:layout_weight="1"
-                        android:gravity="bottom|left"
                         android:textColor="@android:color/black"
                         android:layout_marginBottom="@dimen/activity_tight_margin"
                         android:layout_gravity="center"
                         android:editable="false"
                         android:inputType="number"
-                        android:textAlignment="gravity"
-                        android:textSize="12dp" />
+                        android:textSize="8dp"
+                        android:text="asdf"
+                        android:foregroundGravity="bottom"
+                        android:textIsSelectable="false"
+                        android:gravity="center_vertical|start|clip_horizontal|bottom|left"
+                        android:paddingBottom="6.5dp" />
                 </TableRow>
 
                 <TableRow
@@ -321,7 +324,6 @@
                     <EditText
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/textLitros"
                         android:layout_weight="1"
                         android:gravity="bottom|left"
@@ -331,7 +333,8 @@
                         android:editable="false"
                         android:inputType="number"
                         android:textAlignment="gravity"
-                        android:textSize="12dp" />
+                        android:textSize="8dp"
+                        android:paddingBottom="6.5dp" />
                 </TableRow>
 
                 <TableRow
@@ -356,7 +359,6 @@
                     <EditText
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/textPrimerServ"
                         android:layout_weight="1"
                         android:gravity="bottom|left"
@@ -366,7 +368,8 @@
                         android:editable="false"
                         android:inputType="text"
                         android:textAlignment="center"
-                        android:textSize="12dp" />
+                        android:textSize="8dp"
+                        android:paddingBottom="6.5dp" />
                 </TableRow>
             </TableLayout>
 
