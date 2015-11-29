@@ -51,7 +51,7 @@
 
             <Spinner
                 android:layout_width="0dp"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:id="@+id/farmSpinner"
                 android:layout_gravity="right"
                 android:layout_weight="1.5"
@@ -72,9 +72,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_below="@+id/linearLayout"
-            android:layout_centerHorizontal="true"
-            android:layout_weight="4"
+            android:layout_weight="3.75"
             android:background="@drawable/border_layout_grey">
 
             <LinearLayout
@@ -83,7 +81,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
-                <TextView
+                <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -93,7 +91,9 @@
                     android:layout_margin="@dimen/activity_tight_margin"
                     android:textStyle="bold"
                     android:layout_gravity="center"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    android:inputType="text"
+                    android:textColor="@android:color/black" />
 
                 <TableLayout
                     android:layout_width="match_parent"
@@ -103,35 +103,45 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:layout_marginTop="@dimen/activity_tight_margin"
+                        android:layout_marginBottom="@dimen/activity_tight_margin">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="Locación:"
                             android:id="@+id/textView6"
                             android:layout_weight="1.2"
                             android:gravity="center_vertical"
                             android:textStyle="bold"
                             android:layout_marginLeft="@dimen/activity_tight_margin"
-                            android:textColor="#495054" />
+                            android:textColor="@color/almost_black_gray"
+                            android:textSize="13dp"
+                            android:layout_marginBottom="@dimen/activity_tight_margin" />
 
-                        <TextView
+                        <EditText
                             android:layout_width="0dp"
                             android:layout_height="fill_parent"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="- -"
                             android:id="@+id/textLoc"
                             android:layout_weight="1"
+                            android:inputType="text"
                             android:gravity="center_vertical"
-                            android:textColor="@color/white" />
+                            android:textColor="@android:color/black"
+                            android:layout_marginBottom="@dimen/activity_tight_margin"
+                            android:layout_marginTop="@dimen/activity_tight_margin"
+                            android:layout_gravity="center"
+                            android:editable="false"
+                            android:textAlignment="center"
+                            android:textSize="12dp" />
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1" >
+                        android:layout_weight="1"
+                        android:layout_marginBottom="@dimen/activity_tight_margin">
 
                         <TextView
                             android:layout_width="0dp"
@@ -143,17 +153,34 @@
                             android:gravity="center_vertical"
                             android:textStyle="bold"
                             android:layout_marginLeft="@dimen/activity_tight_margin"
-                            android:textColor="#495054" />
+                            android:textColor="@color/almost_black_gray"
+                            android:layout_marginTop="@dimen/activity_tight_margin"
+                            android:layout_marginBottom="@dimen/activity_tight_margin"
+                            android:textSize="13dp" />
 
-                        <TextView
+                        <EditText
                             android:layout_width="0dp"
                             android:layout_height="fill_parent"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="- -"
                             android:id="@+id/textHato"
                             android:layout_weight="1"
                             android:gravity="center_vertical"
-                            android:textColor="@color/white" />
+                            android:textColor="@android:color/black"
+                            android:inputType="number"
+                            android:layout_marginBottom="@dimen/activity_tight_margin"
+                            android:layout_marginTop="@dimen/activity_tight_margin"
+                            android:layout_gravity="center"
+                            android:editable="false"
+                            android:textAlignment="center"
+                            android:textSize="12dp" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4" >
+
                     </TableRow>
 
                 </TableLayout>
@@ -181,17 +208,25 @@
                         android:gravity="center_vertical"
                         android:textStyle="bold"
                         android:layout_marginLeft="@dimen/activity_tight_margin"
-                        android:textColor="#495054" />
+                        android:textColor="@color/almost_black_gray"
+                        android:textSize="13dp"
+                        android:layout_marginBottom="@dimen/activity_tight_margin" />
 
-                    <TextView
+                    <EditText
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="- -"
                         android:id="@+id/textPartos"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/white" />
+                        android:gravity="bottom|left"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="@dimen/activity_tight_margin"
+                        android:layout_gravity="center"
+                        android:editable="false"
+                        android:inputType="number"
+                        android:layout_margin="@dimen/activity_tight_margin"
+                        android:textAlignment="gravity"
+                        android:textSize="12dp" />
                 </TableRow>
 
                 <TableRow
@@ -209,17 +244,24 @@
                         android:gravity="center_vertical"
                         android:textStyle="bold"
                         android:layout_marginLeft="@dimen/activity_tight_margin"
-                        android:textColor="#495054" />
+                        android:textColor="@color/almost_black_gray"
+                        android:textSize="13dp"
+                        android:layout_marginBottom="@dimen/activity_tight_margin" />
 
-                    <TextView
+                    <EditText
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="- -"
                         android:id="@+id/textLastParto"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/white" />
+                        android:gravity="bottom|left"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="@dimen/activity_tight_margin"
+                        android:layout_gravity="center"
+                        android:editable="false"
+                        android:inputType="text"
+                        android:textAlignment="gravity"
+                        android:textSize="11dp" />
                 </TableRow>
 
                 <TableRow
@@ -237,17 +279,24 @@
                         android:gravity="center_vertical"
                         android:textStyle="bold"
                         android:layout_marginLeft="@dimen/activity_tight_margin"
-                        android:textColor="#495054" />
+                        android:textColor="@color/almost_black_gray"
+                        android:textSize="13dp"
+                        android:layout_marginBottom="@dimen/activity_tight_margin" />
 
-                    <TextView
+                    <EditText
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="- -"
                         android:id="@+id/textDiasLac"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/white" />
+                        android:gravity="bottom|left"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="@dimen/activity_tight_margin"
+                        android:layout_gravity="center"
+                        android:editable="false"
+                        android:inputType="number"
+                        android:textAlignment="gravity"
+                        android:textSize="12dp" />
                 </TableRow>
 
                 <TableRow
@@ -265,17 +314,24 @@
                         android:gravity="center_vertical"
                         android:textStyle="bold"
                         android:layout_marginLeft="@dimen/activity_tight_margin"
-                        android:textColor="#495054" />
+                        android:textColor="@color/almost_black_gray"
+                        android:textSize="13dp"
+                        android:layout_marginBottom="@dimen/activity_tight_margin" />
 
-                    <TextView
+                    <EditText
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="- -"
                         android:id="@+id/textLitros"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/white" />
+                        android:gravity="bottom|left"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="@dimen/activity_tight_margin"
+                        android:layout_gravity="center"
+                        android:editable="false"
+                        android:inputType="number"
+                        android:textAlignment="gravity"
+                        android:textSize="12dp" />
                 </TableRow>
 
                 <TableRow
@@ -293,17 +349,24 @@
                         android:gravity="center_vertical"
                         android:textStyle="bold"
                         android:layout_marginLeft="@dimen/activity_tight_margin"
-                        android:textColor="#495054" />
+                        android:textColor="@color/almost_black_gray"
+                        android:textSize="13dp"
+                        android:layout_marginBottom="@dimen/activity_tight_margin" />
 
-                    <TextView
+                    <EditText
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="- -"
                         android:id="@+id/textPrimerServ"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/white" />
+                        android:gravity="bottom|left"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="@dimen/activity_tight_margin"
+                        android:layout_gravity="center"
+                        android:editable="false"
+                        android:inputType="text"
+                        android:textAlignment="center"
+                        android:textSize="12dp" />
                 </TableRow>
             </TableLayout>
 
@@ -319,6 +382,37 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.75"
+        android:background="@drawable/border_layout" >
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Editar"
+            android:id="@+id/editButton"
+            android:layout_weight="1"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+            android:textSize="12dp"
+            android:onClick="onEditClick" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Guardar"
+            android:id="@+id/saveButton"
+            android:layout_weight="1"
+            android:textSize="12dp"
+            android:onClick="onSaveClick" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Cancelar"
+            android:id="@+id/cancelButton"
+            android:layout_weight="1"
+            android:textSize="12dp"
+            android:onClick="onCancelClick" />
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true">
 
@@ -351,11 +445,11 @@
             android:id="@+id/detenerReproduccion"
             android:layout_marginRight="30dp" />
 
+    </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/rectext" />
-    </LinearLayout>
-
 </LinearLayout>
+
 

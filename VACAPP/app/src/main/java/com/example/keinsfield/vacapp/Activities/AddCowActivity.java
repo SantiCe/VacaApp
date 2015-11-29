@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,31 +17,44 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import com.example.keinsfield.vacapp.Mundo.Utilities;
 import com.example.keinsfield.vacapp.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.util.List;
 
-public class AddCowActivity extends Activity {
+public class AddCowActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private Bitmap image;
     private String filePath;
+    private double lat,lon;
+    private ArrayAdapter<String> spinAdapter;
+    private Spinner spinner;
+    private static GoogleApiClient mGoogleApiClient;
+    private LocationRequest locationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lat = Utilities.ubate.latitude;
+        lon = Utilities.ubate.longitude;
 
         setContentView(R.layout.activity_add_cow);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //Set up spinner
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+        spinner = (Spinner) findViewById(R.id.spinner);
+        spinAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, Utilities.GetFarms(this));
-        spinner.setAdapter(adapter);
+        spinner.setAdapter(spinAdapter);
         Intent intent = getIntent();
         String caller = intent.getStringExtra("caller");
         int number = -1;
@@ -50,7 +64,7 @@ public class AddCowActivity extends Activity {
             RandomAccessFile f = new RandomAccessFile(filePath, "r");
             byte[] data = new byte[(int) f.length()];
             f.read(data);
-            image = Utilities.byteArrayToBitmap(data,this,0.4,0.8);
+            image = Utilities.byteArrayToBitmap(data,this,0.8,0.4);
             if (image != null) {
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageBitmap(image);
@@ -63,6 +77,9 @@ public class AddCowActivity extends Activity {
             } else {
                 number = intent.getIntExtra("number", -1);
             }
+
+            //Connect to location API
+            getLocation();
         }
         catch(Exception e){
 
@@ -71,14 +88,27 @@ public class AddCowActivity extends Activity {
         if(number != -1)txtNumber.setText(""+number);
     }
 
-    public void afterFarmCreated(String selected, int number){
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+    protected void onStart(){
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+    public void  afterFarmCreated(String selected, int number){
         Spinner spinner = (Spinner)findViewById(R.id.spinner);
         if(selected == null) return;
         SpinnerAdapter adapter = spinner.getAdapter();
 
-        for(int i = 0; i < adapter.getCount(); i ++){
-            String name = (String)adapter.getItem(i);
-            if(name.equals(selected)){
+        for(int i = 0; i < adapter.getCount(); i ++) {
+            String name = (String) adapter.getItem(i);
+            if (name.equals(selected)) {
                 spinner.setSelection(i);
                 return;
             }
@@ -109,7 +139,7 @@ public class AddCowActivity extends Activity {
     }
 
     public Bitmap fromBytes(byte[] data) throws Exception{
-        return BitmapFactory.decodeByteArray(data,0,data.length);
+        return BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 
     public void SaveCow(View v) throws Exception{
@@ -122,7 +152,7 @@ public class AddCowActivity extends Activity {
         }
         String farm = spinner.getSelectedItem().toString();
 
-        File rootFolder = Utilities.GetStorageDirectory(this);
+        File rootFolder = Utilities.GetPictureStorageDirectory(this);
         //Log.d("SC","Root: "+rootFolder.toString());
         String folderName = farm;
         int number = -1;
@@ -237,5 +267,65 @@ public class AddCowActivity extends Activity {
         startActivity(intent);
     }
 
+    private void selectClosestFarm(){
+        try{
+            Location curLoc = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
+            if(curLoc == null){
 
+                curLoc.setLatitude(lat);
+                curLoc.setLongitude(lon);
+            }
+            Log.d("SC","Identified currLoc:"+lat+" "+lon);
+            double maxD = Double.MAX_VALUE - 3;
+            int winFarm = -1;
+            List<String> farms = Utilities.GetFarms(this);
+            for(int i = 0; i < spinAdapter.getCount(); i ++){
+                String farm = spinAdapter.getItem(i);
+                Location floc = Utilities.getFarmLocation(farm,this);
+                Log.d("SC",farm+" "+floc);
+
+                if(floc.distanceTo(curLoc) < maxD){
+                    maxD = floc.distanceTo(curLoc);
+                    winFarm = i;
+                }
+            }
+            if(winFarm == -1) return;
+            else{
+                spinner.setSelection(winFarm);
+            }
+        }
+        catch(Exception e){
+            Log.d("SC","Unable to find closest farm. "+e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    private synchronized void getLocation(){
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        buildGoogleApiClient();
+    }
+    @Override
+    public void onConnected(Bundle bundle) {
+        //Try to select the closest farm.
+        Log.d("SC","Does this ever get called?");
+        Log.d("SC","Is client connected? "+mGoogleApiClient.isConnected());
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,locationRequest,this);
+        selectClosestFarm();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Toast.makeText(this, "location :" + location.getLatitude() + " , " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+    }
 }

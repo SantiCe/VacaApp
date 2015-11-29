@@ -1,0 +1,104 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <SurfaceView
+        android:id="@+id/camera_frame"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <com.example.keinsfield.vacapp.Views.FocusBoxView
+    android:id="@+id/focus_box"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:orientation="horizontal"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="32dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginLeft="24dp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:id="@+id/linearLayout3"
+            android:layout_weight="1"
+            android:layout_marginLeft="45dp">
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/add_button"
+                android:background="@drawable/cow_add_layout"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="24dp" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/recog_button"
+                android:background="@drawable/cow_eye_layout"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="24dp" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cloudButton"
+                android:background="@drawable/cloud_layout"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="24dp" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayout2"
+            android:gravity="bottom"
+            android:layout_weight="0.725"
+            android:layout_marginRight="45dp">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/detailButton"
+                android:background="@drawable/detail_layout"
+                android:layout_gravity="center_vertical|left"
+                android:layout_weight="1"
+                android:gravity="center_vertical|left" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.85" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+
+                android:id="@+id/shutter_button"
+                android:background="@drawable/shutter_layout"
+                android:layout_gravity="center_vertical"
+                android:gravity="bottom"
+                android:layout_weight="1"
+                android:layout_marginBottom="4dp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</FrameLayout>

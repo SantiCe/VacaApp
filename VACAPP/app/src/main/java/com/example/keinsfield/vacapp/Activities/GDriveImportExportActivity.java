@@ -538,7 +538,7 @@ public class GDriveImportExportActivity extends Activity implements GoogleApiCli
         }
         Log.d("SC", "Cows to import: " + cows.size());
 
-        File localFolder = Utilities.GetStorageDirectory(GDriveImportExportActivity.this);
+        File localFolder = Utilities.GetPictureStorageDirectory(GDriveImportExportActivity.this);
         if (!localFolder.mkdir() && !localFolder.exists()) throw new Exception("No se pudo crear" +
                 " el directorio local de VACAPP.");
         localFolder = new File(localFolder, farmName);

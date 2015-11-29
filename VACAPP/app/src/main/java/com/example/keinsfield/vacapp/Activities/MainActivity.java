@@ -2,10 +2,13 @@ package com.example.keinsfield.vacapp.Activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -25,7 +28,6 @@ import com.example.keinsfield.vacapp.Views.FocusBoxView;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.Boolean;import java.lang.Exception;import java.lang.Integer;import java.lang.Override;import java.lang.String;
 import java.util.HashMap;
 
 /**
@@ -54,6 +56,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
     Bitmap numberBmp;
     File fullPicFile;
     Button detailButton;
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +85,27 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         for(CowKey key:map.keySet()){
             Log.d("SC",key.farm+" "+key.nv);
         }
-    }
+
+        //Shake detection:http://jasonmcreynolds.com/?p=388
+        // ShakeDetector initialization
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+
+            @Override
+            public void onShake(int count) {
+				/*
+				 * The following method, "handleShakeEvent(count):" is a stub //
+				 * method you would use to setup whatever you want done once the
+				 * device has been shook.
+				 */
+                if(photoTaken) onClick(shutterButton);
+            }
+        });
+        }
+
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -94,9 +122,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         }
 
         cameraEngine = CameraEngine.New(holder);
-        cameraEngine.start();
+        try {
+            cameraEngine.start();
+            Log.d(TAG, "Camera engine started");
+        }
+        catch(Exception e){
+            Utilities.showDialog("Camera not working","Unable to start camera engine.", this);
+            Log.d("SC","ERROR SHOWING CAMERA");
+            e.printStackTrace();
+        }
 
-        Log.d(TAG, "Camera engine started");
+
     }
 
     @Override
@@ -121,7 +157,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         cameraFrame.setOnClickListener(this);
 
         if(cameraEngine!= null)
-            cameraEngine.start();
+        {
+            try {
+                cameraEngine.start();
+            }
+            catch(Exception e){
+                Utilities.showDialog("Camera not working","Unable to start camera engine.", this);
+                Log.d("SC","ERROR SHOWING CAMERA");
+                e.printStackTrace();
+            }
+        }
+
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -134,6 +181,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         }
         SurfaceHolder surfaceHolder = cameraFrame.getHolder();
         surfaceHolder.removeCallback(this);
+        mSensorManager.unregisterListener(mShakeDetector);
     }
     AlertDialog alertDialog;
     @Override
@@ -230,7 +278,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
         if(focusBox.getBox()==null)
             Log.d(TAG, "NULL");
         numberBmp = Tools.getFocusedBitmap(this, camera, data, focusBox.getBox());
-        File dir = Utilities.GetStorageDirectory(this,true);
+        File dir = Utilities.GetPictureStorageDirectory(this, true);
         fullPicFile = new File(dir,"tmpimg");
         if(fullPicFile.exists()) fullPicFile.delete();
         boolean success = false;

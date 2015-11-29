@@ -4,25 +4,35 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.location.Location;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
 
+import com.example.keinsfield.vacapp.Activities.CowDetailActivity;
 import com.example.keinsfield.vacapp.ImageMatcher.Scene;
+import com.google.android.gms.maps.model.LatLng;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static java.lang.String.valueOf;
 
@@ -30,7 +40,7 @@ import static java.lang.String.valueOf;
  * Created by Galapagos on 11/09/2015.
  */
 public class Utilities {
-
+    public static final LatLng ubate = new LatLng(5.315846, -73.820219);
     private static TessBaseAPI tessBaseAPI = new TessBaseAPI();
     static{
         tessBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, "1234567890");
@@ -71,12 +81,43 @@ public class Utilities {
                 });
     }
 
+    public static File getVoiceNoteStorageDirectory(Activity caller) throws Exception{
+        try{
+            // Intente primero hacer un directorio publico en la memoria externa.
+            String state = Environment.getExternalStorageState();
+            if (Environment.MEDIA_MOUNTED.equals(state)){
+
+                File album = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"VACAPP_Voicenotes");
+                if(!album.mkdirs() && !album.isDirectory() && !album.exists()){
+                    // If directory can't be created in public external storage, try private external storage.
+                    album = caller.getExternalFilesDir(null);
+                    album = new File(album,"VACAPP_Voicenotes");
+                    if(!album.mkdirs() && !album.isDirectory() && !album.exists()){
+                        File file = caller.getDir("VACAPP", Context.MODE_PRIVATE);
+                        if(!file.exists()) file.mkdirs();
+                        return file;
+                    }
+                }
+                return album;
+            }
+            else{
+                File file = caller.getDir("VACAPP", Context.MODE_PRIVATE);
+                file = new File(file,"voicenotes");
+                if(!file.exists() || !file.isDirectory()) file.mkdirs();
+                return file;
+            }
+        }
+        catch(Exception e){
+            Log.d("SC", e.getMessage());
+            throw e;
+        }
+    }
     /**
      *
      * @return The external storage directory where the App is saving its pictures.
      * If the returned value is null, there is no external storage available for R/W.
      */
-    public static File GetStorageDirectory(Activity caller, boolean temp){
+    public static File GetPictureStorageDirectory(Activity caller, boolean temp){
         try{
             // Intente primero hacer un directorio publico en la memoria externa.
             String state = Environment.getExternalStorageState();
@@ -109,19 +150,19 @@ public class Utilities {
         }
     }
 
-    public static File GetStorageDirectory(Activity caller){
-        return GetStorageDirectory(caller,false);
+    public static File GetPictureStorageDirectory(Activity caller){
+        return GetPictureStorageDirectory(caller, false);
     }
 
     public static ArrayList<String> GetFarms(Activity caller){
         ArrayList<String> ret = new ArrayList<>();
-        File root = GetStorageDirectory(caller);
+        File root = GetPictureStorageDirectory(caller);
         if(root == null) return ret;
         else{
 
             File[] files = root.listFiles();
             for(File file:files){
-                if(file.isDirectory()){
+                if(file.isDirectory() && !file.getName().equals(CowDetailActivity.VN_DIR)){
                     ret.add(file.getName());
                 }
             }
@@ -131,13 +172,59 @@ public class Utilities {
                 File file = new File(root,key.farm);
                 if(!file.exists() && file.mkdir()) ret.add(key.farm);
             }
+
+            for(String s:ret){
+
+                File info = new File(root,s);
+                if(!info.exists() && !info.isDirectory()) continue;
+                info = new File(info,"info.txt");
+                if(!info.exists()){
+                    try{
+                        Log.d("SC","Setting location for "+s);
+                        PrintWriter pw = new PrintWriter(info);
+                        pw.println(ubate.latitude+" "+ubate.longitude);
+                        pw.close();
+                    }
+                    catch(Exception e){
+
+                    }
+                }
+            }
             return ret;
         }
     }
 
+    public static Location getFarmLocation(String farm, Activity caller){
+
+        try {
+            List<String> farms = GetFarms(caller);
+            if (!farms.contains(farm)) return null;
+            else{
+                File root = GetPictureStorageDirectory(caller);
+                for (String f : farms) {
+                    if (farm.equals(f)) {
+                        File fileFarm = new File(root, f);
+                        fileFarm = new File(fileFarm,"info.txt");
+                        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileFarm)));
+                        String[] sp = br.readLine().split(" ");
+                        double lat = Double.parseDouble(sp[0]);
+                        double lon = Double.parseDouble(sp[1]);
+                        Location loc = new Location(farm);
+                        loc.setLatitude(lat);
+                        loc.setLongitude(lon);
+                        return loc;
+                    }
+                }
+            }
+        }
+        catch(Exception e){
+            Log.d("SC","Failed to retrieve farm location info for: "+farm);
+        }
+        return null;
+    }
     //Returns all vacapp images in the phone storage, organized by farm.
     public static HashMap<String,ArrayList<File>> getAllVacappImages(Activity caller){
-        File root = Utilities.GetStorageDirectory(caller);
+        File root = Utilities.GetPictureStorageDirectory(caller);
         ArrayList<String> farmList = Utilities.GetFarms(caller);
         HashMap<String,ArrayList<File>> files = new HashMap<>();
         Log.d("SC","Entering farms loop.");
@@ -291,7 +378,7 @@ public class Utilities {
     }
 
     public static File getCowBD(Activity context){
-        File root = GetStorageDirectory(context);
+        File root = GetPictureStorageDirectory(context);
         File look = new File(root,"cowBD.cow");
         return look;
     }

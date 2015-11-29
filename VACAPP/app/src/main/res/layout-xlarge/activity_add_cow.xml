@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:baselineAligned="false"
+    tools:context=".AddCowActivity"
+    android:background="@drawable/cow_pattern">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/activity_large_margin"
+        android:background="@drawable/border_layout">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/string_agregar_vaca"
+            android:id="@+id/labelFinca"
+            android:textStyle="bold"
+            android:textColor="@color/LightBlue"
+            android:textSize="36dp"
+            android:layout_margin="@dimen/activity_large_margin" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="@string/string_selecionar_finca"
+            android:layout_weight="0.85"
+            android:id="@+id/labelSelecFinca"
+            android:textStyle="normal"
+            android:textColor="@color/material_grey_100"
+            android:gravity="center_vertical"
+            android:textSize="26dp"
+            android:layout_margin="@dimen/abc_text_size_large_material" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.4"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_weight="3.5"
+                android:layout_height="match_parent"
+                android:id="@+id/spinner"
+                android:spinnerMode="dropdown"
+                android:popupBackground="@color/white"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_marginRight="@dimen/activity_large_margin" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/addFarmButton"
+                android:layout_weight="0.6"
+                android:background="@drawable/add_layout"
+                android:onClick="AddFarm"
+                android:layout_marginLeft="5dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="Número:"
+            android:layout_weight="0.85"
+            android:id="@+id/textView11"
+            android:textStyle="bold|normal"
+            android:textColor="@color/material_grey_100"
+            android:gravity="center_vertical"
+            android:textSize="26dp"
+            android:layout_margin="@dimen/abc_text_size_large_material" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:inputType="number"
+            android:layout_weight="1.5"
+            android:ems="10"
+            android:id="@+id/cowNumberText"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:editable="true"
+            android:elegantTextHeight="true"
+            android:layout_marginBottom="@dimen/activity_tight_margin"
+            android:layout_marginTop="@dimen/activity_tight_margin"
+            android:textStyle="normal"
+            android:textSize="32dp"
+            android:gravity="center_vertical|center_horizontal"
+            style="@style/AppTheme" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:layout_marginTop="@dimen/activity_large_margin"
+            android:layout_marginBottom="32dp"
+            android:layout_marginRight="@dimen/activity_large_margin"
+            android:layout_marginLeft="@dimen/activity_large_margin">
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/addCowButton"
+                android:layout_alignParentLeft="true"
+                android:onClick="SaveCow"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="#273024"
+                android:src="@drawable/check_layout"
+                android:layout_marginRight="@dimen/activity_horizontal_margin" />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/backButton"
+                android:layout_alignParentRight="true"
+                android:onClick="BackToMain"
+
+                android:layout_weight="1"
+                android:layout_gravity="center|right"
+                android:src="@drawable/back_layout"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="#302425" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <GridLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/border_layout"
+        android:layout_margin="@dimen/activity_large_margin">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:src="@drawable/cute_tongue_cow"
+            android:contentDescription="@string/string_tu_vaca"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
+    </GridLayout>
+
+</LinearLayout>
